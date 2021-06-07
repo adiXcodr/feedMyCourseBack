@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import classes from './Home.module.css';
-import { Route, Link, Switch } from 'react-router-dom';
+import { Route, Link, Switch, withRouter} from 'react-router-dom';
 import Landing from './Landing';
 import Dashboard from './Dashboard';
 import About from '../Components/Aboutus';
@@ -33,6 +33,7 @@ class Home extends Component {
     firebase.auth().signOut().then(() => {
       // Sign-out successful.
       this.closeOverlay()
+      this.props.history.push("/");
     }).catch(function (error) {
       // An error happened.
     })
@@ -46,6 +47,10 @@ class Home extends Component {
       }
     });
   }
+
+  privateRoutes = () => {
+
+  };
 
   render() {
     return (
@@ -67,14 +72,19 @@ class Home extends Component {
 
         <div className={classes.Container}>
           <div className={classes.navbarcontainer}>
-            <div className={classes.logocol} ><Link to=""><img src={logo} alt="companay-logo" width="30" height="30" /><span>Feed My Course</span></Link></div>
+            <div className={classes.logocol} ><Link to=""><img src={logo} alt="companay-logo" width="30" height="30" /><span>Feedify</span></Link></div>
             <div className={classes.navlist}>
-              <ul>
-                <li><Link to="/dashboard">Dashboard</Link></li>
-                <li><Link to="/about">About Us</Link></li>
-                <li><Link to="/contact">Contact Us</Link></li>
-                {this.state.loggedin ? <li onClick={this.singOutUser}><Link >Sign Out</Link></li> : null}
-              </ul>
+
+              {this.state.loggedin ?
+                <ul>
+                  <li><Link to="/dashboard">Dashboard</Link></li>
+                  <li onClick={this.singOutUser}><Link >Sign Out</Link></li>
+                </ul>
+                : <ul>
+                  <li><Link to="/">Home</Link></li>
+                  <li><Link to="/about">About Us</Link></li></ul>
+              }
+
             </div>
             <span className={classes.hamburger} onClick={this.openOverlay}>&#9776;</span>
           </div>
@@ -91,4 +101,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default withRouter(Home);

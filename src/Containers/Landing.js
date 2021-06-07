@@ -37,7 +37,8 @@ const uiConfig = {
   signInOptions: [
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
   ],
   // Other config options...
 }
@@ -54,11 +55,11 @@ class Landing extends Component {
             <React.Fragment>
               <div className={classes.firstcol}>
                 <div>
-                  <h1 className={classes.heading}>A course feedback management system</h1>
+                  <h1 className={classes.heading}>Feedify</h1>
                 </div>
 
                 <div>
-                  <p className={classes.para}>something for everyone.</p>
+                  <p className={classes.para}>A course feedback management system.</p>
                 </div>
 
                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} className={classes.emailbox} />
