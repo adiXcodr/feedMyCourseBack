@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import classes from './Home.module.css';
-import { Route, Link, Switch, withRouter} from 'react-router-dom';
+import { Route, Link, Switch, withRouter } from 'react-router-dom';
 import Landing from './Landing';
 import Dashboard from './Dashboard';
 import About from '../Components/Aboutus';
 import logo from "../Resources/Images/logo.svg";
 import firebase from 'firebase';
 import { firebaseConfig } from "../constants";
+const db = firebase.firestore();
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -21,7 +22,7 @@ class Home extends Component {
     overlaywidth: 0,
     loggedin: null,
     loading: true,
-    user:null
+    user: null
   }
 
   openOverlay = () => {
@@ -31,10 +32,10 @@ class Home extends Component {
     this.setState({ overlaywidth: 0 })
   }
   singOutUser = () => {
-    firebase.auth().signOut().then(() => {
+    firebase.auth().signOut().then(async () => {
       // Sign-out successful.
       this.closeOverlay();
-      localStorage.clear();
+      await localStorage.clear();
       this.props.history.push("/");
     }).catch(function (error) {
       // An error happened.
@@ -43,9 +44,22 @@ class Home extends Component {
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({ loggedin: true, loading: false, user:user })
+        db.collection("users").doc(user.uid).get().then((doc) => {
+          if (doc.exists) {
+            console.log("User data:", doc.data());
+            let newUser = user;
+            newUser.userType = doc.data().userType;
+            this.setState({ loggedin: true, loading: false, user: newUser });
+          } else {
+            console.log("No such document!");
+            this.setState({ loggedin: true, loading: false, user: user });
+          }
+        }).catch((error) => {
+          console.log("Error getting user data:", error);
+          this.setState({ loggedin: true, loading: false, user: user });
+        });
       } else {
-        this.setState({ loggedin: false, loading: false, user:null })  // No user is signed in.
+        this.setState({ loggedin: false, loading: false, user: null })  // No user is signed in.
       }
     });
   }
@@ -92,7 +106,7 @@ class Home extends Component {
           </div>
           <div className={classes.contentcontainer}>
             <Switch>
-              <Route path='/' exact render={() => <Landing loading={this.state.loading} loggedin={this.state.loggedin} user={this.state.user}/>} />
+              <Route path='/' exact render={() => <Landing loading={this.state.loading} loggedin={this.state.loggedin} user={this.state.user} />} />
               <Route path='/dashboard' exact render={() => <Dashboard loading={this.state.loading} loggedin={this.state.loggedin} user={this.state.user} />} />
               <Route path='/about' exact render={() => <About />} />
             </Switch>
