@@ -21,6 +21,7 @@ class Home extends Component {
     overlaywidth: 0,
     loggedin: null,
     loading: true,
+    user:null
   }
 
   openOverlay = () => {
@@ -32,7 +33,8 @@ class Home extends Component {
   singOutUser = () => {
     firebase.auth().signOut().then(() => {
       // Sign-out successful.
-      this.closeOverlay()
+      this.closeOverlay();
+      localStorage.clear();
       this.props.history.push("/");
     }).catch(function (error) {
       // An error happened.
@@ -41,9 +43,9 @@ class Home extends Component {
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({ loggedin: true, loading: false })
+        this.setState({ loggedin: true, loading: false, user:user })
       } else {
-        this.setState({ loggedin: false, loading: false })  // No user is signed in.
+        this.setState({ loggedin: false, loading: false, user:null })  // No user is signed in.
       }
     });
   }
@@ -90,8 +92,8 @@ class Home extends Component {
           </div>
           <div className={classes.contentcontainer}>
             <Switch>
-              <Route path='/' exact render={() => <Landing loading={this.state.loading} loggedin={this.state.loggedin} />} />
-              <Route path='/dashboard' exact render={() => <Dashboard loading={this.state.loading} loggedin={this.state.loggedin} />} />
+              <Route path='/' exact render={() => <Landing loading={this.state.loading} loggedin={this.state.loggedin} user={this.state.user}/>} />
+              <Route path='/dashboard' exact render={() => <Dashboard loading={this.state.loading} loggedin={this.state.loggedin} user={this.state.user} />} />
               <Route path='/about' exact render={() => <About />} />
             </Switch>
           </div>

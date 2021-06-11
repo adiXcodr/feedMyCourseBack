@@ -1,59 +1,87 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import firebase from 'firebase';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import classes from './Dashboard.module.css';
-import { useHistory, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { Select, Button, MenuItem } from '@material-ui/core';
+const db = firebase.firestore();
 
-const uiConfig = {
-  callbacks: {
-    signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-      var user = authResult.user;
-      var credential = authResult.credential;
-      var isNewUser = authResult.additionalUserInfo.isNewUser;
-      var providerId = authResult.additionalUserInfo.providerId;
-      var operationType = authResult.operationType;
-      // Do something with the returned AuthResult.
-      // Return type determines whether we continue the redirect automatically
-      // or whether we leave that to developer to handle.
-      return true;
-    },
-    signInFailure: function (error) {
-      // Some unrecoverable error occurred during sign-in.
-      // Return a promise when error handling is completed and FirebaseUI
-      // will reset, clearing any UI. This commonly occurs for error code
-      // 'firebaseui/anonymous-upgrade-merge-conflict' when merge conflict
-      // occurs. Check below for more details on this.
-      // return handleUIError(error);
-    },
+const allUserTypes = [
+  "Student",
+  "Faculty",
+  "Parents",
+  "Alumni",
+  "Industry Personel"
+];
 
-  },
-  queryParameterForSignInSuccessUrl: 'signInSuccessUrl',
-  signInFlow: 'popup',
-  signInSuccessUrl: '',//Specifying sign in success url can cause double redirect since we are also managing redirect in react-router with local state.
-  signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-  ],
-  // Other config options...
-}
 const Dashboard = (props) => {
+
+  const [user, setUser] = useState(null);
+  const [userType, setUserType] = useState("Student");
+
+  const handleUserTypeChange = () => {
+    if (user) {
+      db.collection("users").doc(user.uid).update({ userType: userType }).then(() => {
+        console.log("Changed usertype to", userType);
+        let newUser = user;
+        newUser.userType = userType;
+        setUser(newUser);
+        window.location.reload();
+      }).catch((err) => {
+        console.lof("Could not change user-type", err);
+      });
+    }
+  };
 
   useEffect(() => {
     if (!props.loggedin) {
       props.history.push("/");
     }
   }, [props.loggedin]);
+
+  useEffect(() => {
+    console.log("User Data", props.user);
+    if (props.user) {
+      setUser(props.user);
+      localStorage.setItem("uid", props.user.uid);
+      localStorage.setItem("name", props.user.displayName);
+      localStorage.setItem("email", props.user.email);
+      localStorage.setItem("photo", props.user.photoURL);
+      localStorage.setItem("phone", props.user.phoneNumber);
+      localStorage.setItem("userType", props.user.userType || null);
+    }
+
+  }, [props.user]);
+
   return (
-    <div className={classes.contentwrapper}>
+    <div className={classes.contentwrapper} style={{ width: "100vw" }}>
       {props.loading ? <p>Loading..</p> :
-        (!props.loggedin ?
+        (user && user.userType ?
           <React.Fragment>
-            <p>Please sign in to see this page.</p>
-            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} className={classes.emailbox} />
-          </React.Fragment> :
-          <p>Private stuff here !</p>
-        )}
+            <p>Private stuff here !</p>
+          </React.Fragment>
+          :
+          <div style={{
+            width: "100%"
+          }}>
+            <p style={{ fontSize: 30, marginBottom: 30 }}>Help us know you better.</p>
+            <p style={{ fontSize: 15 }}>Who are you?</p>
+            <Select
+              labelId="userType-select-label"
+              id="userType-select"
+              value={userType}
+              onChange={(e) => setUserType(e.target.value)}
+              variant="outlined"
+              style={{ width: "30%", marginBottom: 30 }}
+            >
+              {allUserTypes.map((val) => <MenuItem value={val}>{val}</MenuItem>)}
+            </Select>
+            <br></br>
+            <Button style={{ width: "20%" }} variant="contained" color="primary" onClick={handleUserTypeChange}>
+              Save
+            </Button>
+          </div>
+        )
+      }
     </div>
 
   );
