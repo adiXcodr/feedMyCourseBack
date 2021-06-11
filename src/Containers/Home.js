@@ -46,9 +46,12 @@ class Home extends Component {
       if (user) {
         db.collection("users").doc(user.uid).get().then((doc) => {
           if (doc.exists) {
-            console.log("User data:", doc.data());
+            let db_user = doc.data();
+            console.log("User data:", db_user);
             let newUser = user;
-            newUser.userType = doc.data().userType;
+            for (const property in db_user) {
+              newUser[property] = db_user[property];
+            }
             this.setState({ loggedin: true, loading: false, user: newUser });
           } else {
             console.log("No such document!");
