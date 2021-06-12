@@ -31,7 +31,7 @@ const Dashboard = (props) => {
 
 
   return (
-    <div className={classes.contentwrapper} style={{ width: "100vw" }}>
+    <div className={classes.contentwrapper} style={{ width: "100%"}}>
       {props.loading ? <p>Loading..</p> :
         (user && user.userType ?
           <React.Fragment>
