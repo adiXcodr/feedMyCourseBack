@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import stockillustration from '../Resources/Images/stockillustration.svg';
 import classes from './Landing.module.css';
-import firebase from 'firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Redirect } from 'react-router-dom';
+import firebase from "../firebaseHandler";
 
 let redirect = <Redirect to="dashboard" />;
 
@@ -38,7 +38,7 @@ const uiConfig = {
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    // firebase.auth().FacebookAuthProvider.PROVIDER_ID,
   ],
   // Other config options...
 }

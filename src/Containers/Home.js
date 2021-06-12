@@ -5,15 +5,8 @@ import Landing from './Landing';
 import Dashboard from './Dashboard';
 import About from '../Components/Aboutus';
 import logo from "../Resources/Images/logo.svg";
-import firebase from 'firebase';
-import { firebaseConfig } from "../constants";
+import firebase from "../firebaseHandler";
 const db = firebase.firestore();
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-} else {
-  firebase.app(); // if already initialized, use that one
-}
 
 
 class Home extends Component {
@@ -47,11 +40,14 @@ class Home extends Component {
         db.collection("users").doc(user.uid).get().then((doc) => {
           if (doc.exists) {
             let db_user = doc.data();
-            console.log("User data:", db_user);
+            console.log("User data from firestore", db_user);
             let newUser = user;
             for (const property in db_user) {
-              newUser[property] = db_user[property];
+              if (!(property in newUser)) {
+                newUser[property] = db_user[property];
+              }
             }
+            console.log("Combined user data", newUser);
             this.setState({ loggedin: true, loading: false, user: newUser });
           } else {
             console.log("No such document!");
