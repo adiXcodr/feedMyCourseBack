@@ -14,22 +14,7 @@ class Home extends Component {
     user: null
   }
 
-  openOverlay = () => {
-    this.setState({ overlaywidth: 100 })
-  }
-  closeOverlay = () => {
-    this.setState({ overlaywidth: 0 })
-  }
-  singOutUser = () => {
-    firebase.auth().signOut().then(async () => {
-      // Sign-out successful.
-      this.closeOverlay();
-      await localStorage.clear();
-      this.props.history.push("/");
-    }).catch(function (error) {
-      // An error happened.
-    })
-  }
+ 
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -59,10 +44,6 @@ class Home extends Component {
       }
     });
   }
-
-  privateRoutes = () => {
-
-  };
 
   render() {
     return (<SideBar loading={this.state.loading} loggedin={this.state.loggedin} user={this.state.user} />)

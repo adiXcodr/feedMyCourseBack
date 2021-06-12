@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import selfClasses from '../Containers/Home.module.css';
+import { useSelector, useDispatch } from "react-redux";
+import { saveUserData, setAuth } from "../redux/actions";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Route, Link, Switch, withRouter } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
@@ -15,12 +16,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
+import HomeIcon from '@material-ui/icons/Home';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
 import firebase from "../firebaseHandler";
 import Landing from "../Containers/Landing";
 import Dashboard from "../Containers/Dashboard";
+import About from "./GiveFeedback";
 
 const drawerWidth = 240;
 
@@ -88,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
 
 function MiniDrawer(props) {
     const { loading, loggedin, user, history } = props;
+    const dispatch = useDispatch();
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = useState(false);
@@ -103,13 +108,29 @@ function MiniDrawer(props) {
     const singOutUser = () => {
         firebase.auth().signOut().then(async () => {
             await localStorage.clear();
+            dispatch(setAuth(false));
+            dispatch(saveUserData(null));
             history.push("/");
         }).catch(function (error) {
             // An error happened.
         })
     };
 
-
+    useEffect(() => {
+        dispatch(saveUserData(user));
+        if (!user) {
+            dispatch(setAuth(false));
+        }
+        else {
+            dispatch(setAuth(true));
+            localStorage.setItem("uid", props.user.uid);
+            localStorage.setItem("name", props.user.displayName);
+            localStorage.setItem("email", props.user.email);
+            localStorage.setItem("photo", props.user.photoURL);
+            localStorage.setItem("phone", props.user.phoneNumber);
+            localStorage.setItem("userType", props.user.userType || null);
+        }
+    }, [user]);
 
     return (
         <div className={classes.root}>
@@ -154,6 +175,9 @@ function MiniDrawer(props) {
                 }}
             >
                 <div className={classes.toolbar}>
+                    <Typography variant="h6" noWrap>
+                        Menu
+                    </Typography>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
@@ -163,7 +187,7 @@ function MiniDrawer(props) {
                     <List>
 
                         <ListItem button key={"Dashboard"} onClick={() => history.push("/dashboard")}>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary={"Dashboard"} />
                         </ListItem>
 
@@ -172,7 +196,7 @@ function MiniDrawer(props) {
                     <List>
 
                         <ListItem button key={"Home"} onClick={() => history.push("/")}>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary={"Home"} />
                         </ListItem>
 
@@ -182,17 +206,18 @@ function MiniDrawer(props) {
                 {loggedin &&
                     <List>
                         <ListItem button key={"Log Out"} onClick={singOutUser}>
-                            <ListItemIcon><MailIcon /></ListItemIcon>
+                            <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
                             <ListItemText primary={"Log Out"} />
                         </ListItem>
                     </List>
                 }
             </Drawer>
 
-            <div style={{marginTop:"10vh"}}>
+            <div style={{ marginTop: "10vh", width:"100%" }}>
                 <Switch>
                     <Route path='/' exact render={() => <Landing loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/dashboard' exact render={() => <Dashboard loading={loading} loggedin={loggedin} user={user} />} />
+                    <Route path='/dashboard/giveFeedback' exact render={() => <About loading={loading} loggedin={loggedin} user={user} />} />
                 </Switch>
 
             </div>
