@@ -18,13 +18,15 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import HomeIcon from '@material-ui/icons/Home';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import firebase from "../firebaseHandler";
 import Landing from "../Containers/Landing";
 import Dashboard from "../Containers/Dashboard";
-import About from "./GiveFeedback";
+import GiveFeedback from "./GiveFeedback";
+import UserType from './UserType';
+import Profile from "../Containers/Profile";
 
 const drawerWidth = 240;
 
@@ -190,6 +192,10 @@ function MiniDrawer(props) {
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary={"Dashboard"} />
                         </ListItem>
+                        <ListItem button key={"Profile"} onClick={() => history.push("/profile")}>
+                            <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+                            <ListItemText primary={"Profile"} />
+                        </ListItem>
 
                     </List>
                     :
@@ -213,11 +219,13 @@ function MiniDrawer(props) {
                 }
             </Drawer>
 
-            <div style={{ marginTop: "10vh", width:"100%" }}>
+            <div style={{ marginTop: "10vh", width: "100%" }}>
                 <Switch>
                     <Route path='/' exact render={() => <Landing loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/dashboard' exact render={() => <Dashboard loading={loading} loggedin={loggedin} user={user} />} />
-                    <Route path='/dashboard/giveFeedback' exact render={() => <About loading={loading} loggedin={loggedin} user={user} />} />
+                    <Route path='/changeUsertype' exact render={() => <UserType loading={loading} loggedin={loggedin} user={user} />} />
+                    <Route path='/dashboard/giveFeedback' exact render={() => <GiveFeedback loading={loading} loggedin={loggedin} user={user} />} />
+                    <Route path='/profile' exact render={() => <Profile loading={loading} loggedin={loggedin} user={user} />} />
                 </Switch>
 
             </div>

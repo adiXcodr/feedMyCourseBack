@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Button, MenuItem } from '@material-ui/core';
 import firebase from "../firebaseHandler";
+import { useSelector, useDispatch } from "react-redux";
+import { saveUserData } from "../redux/actions";
 const db = firebase.firestore();
 
 const allUserTypes = [
@@ -13,8 +15,9 @@ const allUserTypes = [
 
 const UserType = (props) => {
     const { } = props;
-    const [user, setUser] = useState(null);
-    const [userType, setUserType] = useState(String(localStorage.getItem("userType") || "Student"));
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.userData);
+    const [userType, setUserType] = useState(user && user.userType ? user.userType : "Student");
 
 
     const handleUserTypeChange = () => {
@@ -23,8 +26,7 @@ const UserType = (props) => {
                 console.log("Changed usertype to", userType);
                 let newUser = user;
                 newUser.userType = userType;
-                setUser(newUser);
-                window.location.reload();
+                dispatch(saveUserData(newUser));
             }).catch((err) => {
                 console.log("Could not change user-type", err);
             });

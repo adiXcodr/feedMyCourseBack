@@ -5,23 +5,41 @@ import { useSelector, useDispatch } from "react-redux";
 import SelectUserType from "../Components/UserType";
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SearchIcon from '@material-ui/icons/Search';
-
+import firebase from "../firebaseHandler";
+const db = firebase.firestore();
 
 const Dashboard = (props) => {
   const { history } = props;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userData);
   const loggedin = useSelector((state) => state.auth.loggedin);
-  const [courses, setCourses] = useState([
+  const [orgcourses, setOrgCourses] = useState([
     { name: "Data Structures", courseCode: "CO112", instructorName: "Arindam Karmakar", courseCredits: 3, datePosted: Date.now(), instructorEmail: "ak@gmail.com" },
     { name: "Software Engineering", courseCode: "CO113", instructorName: "Sattapathy", courseCredits: 2, datePosted: Date.now(), instructorEmail: "sp@gmail.com" },
     { name: "Cryptography", courseCode: "CO402", instructorName: "Nityananda Sarma", courseCredits: 4, datePosted: Date.now(), instructorEmail: "nmcse@gmail.com" }
   ]);
+  const [courses, setCourses] = useState([]);
 
   const handleSearch = (e) => {
     let query = e.target.value;
-    console.log("Search Val", query);
+    console.log("Search Courses Value", query);
+    if (query != "") {
+      query = query.toLowerCase();
+      let result = courses.filter(item => (
+        item.name + item.courseCode + item.instructorName + item.instructorEmail
+      ).toLowerCase().indexOf(query) > -1);
+      console.log("Result is", result)
+      setCourses(result);
+    }
+    else {
+      setCourses(orgcourses);
+    }
+
   };
+
+  useEffect(() => {
+    setCourses(orgcourses);
+  }, []);
 
   useEffect(() => {
     if (!loggedin) {
