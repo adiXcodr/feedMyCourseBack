@@ -3,6 +3,7 @@ import stockillustration from '../Resources/Images/stockillustration.svg';
 import classes from './Landing.module.css';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Redirect } from 'react-router-dom';
+import { useSelector } from "react-redux";
 import firebase from "../firebaseHandler";
 
 let redirect = <Redirect to="dashboard" />;
@@ -33,7 +34,7 @@ const uiConfig = {
   },
   queryParameterForSignInSuccessUrl: 'signInSuccessUrl',
   signInFlow: 'popup',
-  signInSuccessUrl: '',//Specifying sign in success url can cause double redirect since we are also managing redirect in react-router with local state.
+  signInSuccessUrl: '/dashboard',//Specifying sign in success url can cause double redirect since we are also managing redirect in react-router with local state.
   signInOptions: [
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -45,35 +46,33 @@ const uiConfig = {
 
 
 
-class Landing extends Component {
+const Landing = () => {
+  const user = useSelector((state) => state.auth.userData);
+  const loggedin = useSelector((state) => state.auth.loggedin);
+  return (
+    <div className={classes.contentwrapper}>
+      {(loggedin ? redirect :
+        <React.Fragment>
+          <div className={classes.firstcol}>
+            <div>
+              <h1 className={classes.heading}>Feedify</h1>
+            </div>
 
-  render() {
-    return (
-      <div className={classes.contentwrapper}>
-        {this.props.loading ? <p>Loading..</p> :
-          (this.props.loggedin ? redirect :
-            <React.Fragment>
-              <div className={classes.firstcol}>
-                <div>
-                  <h1 className={classes.heading}>Feedify</h1>
-                </div>
+            <div>
+              <p className={classes.para}>A course feedback management system.</p>
+            </div>
 
-                <div>
-                  <p className={classes.para}>A course feedback management system.</p>
-                </div>
+            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} className={classes.emailbox} />
 
-                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} className={classes.emailbox} />
+          </div>
 
-              </div>
+          <div className={classes.secondcol}>
+            <img className={classes.stock_illustration} src={stockillustration} alt="trading illustration"></img>
+          </div>
+        </React.Fragment>
+      )}
+    </div>
 
-              <div className={classes.secondcol}>
-                <img className={classes.stock_illustration} src={stockillustration} alt="trading illustration"></img>
-              </div>
-            </React.Fragment>
-          )}
-      </div>
-
-    );
-  }
+  );
 }
 export default Landing;

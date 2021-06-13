@@ -49,72 +49,75 @@ const Dashboard = (props) => {
 
   return (
     <div style={{ width: "90%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
-      {props.loading ? <p>Loading..</p> :
-        (user && user.userType ?
-          <div style={{}}>
+      {(user && user.userType ?
+        <div style={{}}>
 
-            <Card className="dashboardTopBar"
+          <Card className="dashboardTopBar"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              width: "80%",
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginBottom: 20,
+              padding: 20
+            }}>
+
+            <TextField
+              id="searchField"
+              label="Search"
+              placeholder="Search for your course"
+              variant="outlined"
+              onChange={handleSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
               style={{
-                display: "flex",
-                flexDirection: "row",
                 width: "80%",
                 marginLeft: "auto",
-                marginRight: "auto",
-                marginBottom: 20,
-                padding: 20
-              }}>
+                marginRight: "auto"
+              }}
+            />
 
-              <TextField
-                id="searchField"
-                label="Search"
-                placeholder="Search for your course"
-                variant="outlined"
-                onChange={handleSearch}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                style={{
-                  width: "80%",
-                  marginLeft: "auto",
-                  marginRight: "auto"
-                }}
-              />
+            {user.userType == "Faculty" &&
+              <Button size="small" variant="contained" color="primary" onClick={() => console.log("Add Course")}>Add Course</Button>
+            }
+          </Card>
+
+          {courses.map((course) =>
+            <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }} >
+
+              <CardContent>
+                <Badge badgeContent={course.courseCredits} color="primary" style={{ float: "right" }}>
+                  <MonetizationOnIcon />
+                </Badge>
+                <Typography color="textSecondary" gutterBottom>
+                  {course.courseCode}
+                </Typography>
+                <Typography variant="h5" component="h2">
+                  {course.name}
+                </Typography>
+                <Typography color="textSecondary">
+                  {course.instructorName} - {course.instructorEmail}
+                </Typography>
+
+              </CardContent>
+              <CardActions>
+                <Button size="small" onClick={() => history.push({
+                  pathname: "/dashboard/giveFeedback",
+                  state: { courseDetails: course }
+                })}>Give Feedback</Button>
+              </CardActions>
             </Card>
-
-            {courses.map((course) =>
-              <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }} >
-
-                <CardContent>
-                  <Badge badgeContent={course.courseCredits} color="primary" style={{ float: "right" }}>
-                    <MonetizationOnIcon />
-                  </Badge>
-                  <Typography color="textSecondary" gutterBottom>
-                    {course.courseCode}
-                  </Typography>
-                  <Typography variant="h5" component="h2">
-                    {course.name}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {course.instructorName} - {course.instructorEmail}
-                  </Typography>
-
-                </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={() => history.push({
-                    pathname: "/dashboard/giveFeedback",
-                    state: { courseDetails: course }
-                  })}>Give Feedback</Button>
-                </CardActions>
-              </Card>
-            )}
-          </div>
-          :
-          <SelectUserType user={user} />
-        )
+          )}
+        </div>
+        :
+        <SelectUserType user={user} />
+      )
       }
     </div>
 

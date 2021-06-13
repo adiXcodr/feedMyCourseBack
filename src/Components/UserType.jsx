@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Select, Button, MenuItem } from '@material-ui/core';
 import firebase from "../firebaseHandler";
 import { useSelector, useDispatch } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { saveUserData } from "../redux/actions";
 const db = firebase.firestore();
 
@@ -14,7 +15,7 @@ const allUserTypes = [
 ];
 
 const UserType = (props) => {
-    const { } = props;
+    const { history } = props;
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.userData);
     const [userType, setUserType] = useState(user && user.userType ? user.userType : "Student");
@@ -32,6 +33,12 @@ const UserType = (props) => {
             });
         }
     };
+
+    useEffect(() => {
+        if (!user) {
+            history.pushState("/");
+        }
+    }, []);
 
     return (
         <div style={{
@@ -61,4 +68,4 @@ const UserType = (props) => {
 
 
 
-export default UserType;
+export default withRouter(UserType);

@@ -118,22 +118,6 @@ function MiniDrawer(props) {
         })
     };
 
-    useEffect(() => {
-        dispatch(saveUserData(user));
-        if (!user) {
-            dispatch(setAuth(false));
-        }
-        else {
-            dispatch(setAuth(true));
-            localStorage.setItem("uid", props.user.uid);
-            localStorage.setItem("name", props.user.displayName);
-            localStorage.setItem("email", props.user.email);
-            localStorage.setItem("photo", props.user.photoURL);
-            localStorage.setItem("phone", props.user.phoneNumber);
-            localStorage.setItem("userType", props.user.userType || null);
-        }
-    }, [user]);
-
     return (
         <div className={classes.root}>
             <CssBaseline />
