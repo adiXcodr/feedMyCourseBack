@@ -84,7 +84,7 @@ const Dashboard = (props) => {
             />
 
             {user.userType == "Faculty" &&
-              <Button size="small" variant="contained" color="primary" onClick={() => console.log("Add Course")}>Add Course</Button>
+              <Button size="small" variant="contained" color="primary" onClick={() => history.push("/addCourse")}>Add Course</Button>
             }
           </Card>
 

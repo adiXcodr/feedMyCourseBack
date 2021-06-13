@@ -25,6 +25,7 @@ import firebase from "../firebaseHandler";
 import Landing from "../Containers/Landing";
 import Dashboard from "../Containers/Dashboard";
 import GiveFeedback from "./GiveFeedback";
+import AddCourse from "./AddCourse";
 import UserType from './UserType';
 import Profile from "../Containers/Profile";
 
@@ -209,6 +210,7 @@ function MiniDrawer(props) {
                     <Route path='/dashboard' exact render={() => <Dashboard loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/changeUsertype' exact render={() => <UserType loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/dashboard/giveFeedback' exact render={() => <GiveFeedback loading={loading} loggedin={loggedin} user={user} />} />
+                    <Route path='/addCourse' exact render={() => <AddCourse loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/profile' exact render={() => <Profile loading={loading} loggedin={loggedin} user={user} />} />
                 </Switch>
 

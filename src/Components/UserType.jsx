@@ -28,6 +28,7 @@ const UserType = (props) => {
                 let newUser = user;
                 newUser.userType = userType;
                 dispatch(saveUserData(newUser));
+                history.push("/profile");
             }).catch((err) => {
                 console.log("Could not change user-type", err);
             });
@@ -36,7 +37,7 @@ const UserType = (props) => {
 
     useEffect(() => {
         if (!user) {
-            history.pushState("/");
+            history.push("/");
         }
     }, []);
 
