@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import SelectUserType from "../Components/UserType";
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SearchIcon from '@material-ui/icons/Search';
+import moment from "moment";
 import firebase from "../firebaseHandler";
 const db = firebase.firestore();
 
@@ -13,13 +14,10 @@ const Dashboard = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userData);
   const loggedin = useSelector((state) => state.auth.loggedin);
-  const [orgcourses, setOrgCourses] = useState([
-    { name: "Data Structures", courseCode: "CO112", instructorName: "Arindam Karmakar", courseCredits: 3, datePosted: Date.now(), instructorEmail: "ak@gmail.com" },
-    { name: "Software Engineering", courseCode: "CO113", instructorName: "Sattapathy", courseCredits: 2, datePosted: Date.now(), instructorEmail: "sp@gmail.com" },
-    { name: "Cryptography", courseCode: "CO402", instructorName: "Nityananda Sarma", courseCredits: 4, datePosted: Date.now(), instructorEmail: "nmcse@gmail.com" }
-  ]);
+  const [orgcourses, setOrgCourses] = useState([]);
   const [courses, setCourses] = useState([]);
 
+  
   const handleSearch = (e) => {
     let query = e.target.value;
     console.log("Search Courses Value", query);
@@ -37,8 +35,19 @@ const Dashboard = (props) => {
 
   };
 
+  const getAllCourses = () => {
+    db.collection("courses").get().then((querySnapshot) => {
+      let courses = [];
+      querySnapshot.forEach((doc) => {
+        courses.push(doc.data());
+      });
+      setOrgCourses(courses);
+      setCourses(courses);
+    });
+  };
+
   useEffect(() => {
-    setCourses(orgcourses);
+    getAllCourses();
   }, []);
 
   useEffect(() => {
@@ -101,8 +110,16 @@ const Dashboard = (props) => {
                 <Typography variant="h5" component="h2">
                   {course.name}
                 </Typography>
-                <Typography color="textSecondary">
+
+                <Typography variant="h6" component="h4" color="textSecondary">
+                  Posted By
+                </Typography>
+                <Typography >
                   {course.instructorName} - {course.instructorEmail}
+                </Typography>
+
+                <Typography >
+                  {moment(course.datePosted).fromNow()}
                 </Typography>
 
               </CardContent>
