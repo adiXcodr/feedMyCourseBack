@@ -2,11 +2,23 @@ import React, { useEffect, useState } from 'react';
 import Home from './Containers/Home';
 import classes from './App.module.css';
 import { BrowserRouter } from 'react-router-dom';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider } from 'react-redux';
 import store from "./redux/store";
 import { setAuth, saveUserData } from "./redux/actions";
 import firebase from "./firebaseHandler";
 const db = firebase.firestore();
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#FFCB2B'
+    },
+    secondary: {
+      main: '#059BE5'
+    }
+  }
+});
 
 const App = () => {
 
@@ -56,7 +68,9 @@ const App = () => {
             {loading ?
               <div>Loading...</div>
               :
-              <Home />
+              <MuiThemeProvider theme={theme}>
+                <Home />
+              </MuiThemeProvider>
             }
           </Provider>
         </div>

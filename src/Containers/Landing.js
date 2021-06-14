@@ -50,7 +50,7 @@ const Landing = () => {
   const user = useSelector((state) => state.auth.userData);
   const loggedin = useSelector((state) => state.auth.loggedin);
   return (
-    <div className={classes.contentwrapper}>
+    <div className={classes.contentwrapper} style={{ marginTop: 100 }}>
       {(loggedin ? redirect :
         <React.Fragment>
           <div className={classes.firstcol}>

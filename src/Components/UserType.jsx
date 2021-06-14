@@ -23,7 +23,7 @@ const UserType = (props) => {
 
     const handleUserTypeChange = () => {
         if (user) {
-            db.collection("users").doc(user.uid).update({ userType: userType }).then(() => {
+            db.collection("users").doc(user.uid).set({ userType: userType }, { merge: true }).then(() => {
                 console.log("Changed usertype to", userType);
                 let newUser = user;
                 newUser.userType = userType;
@@ -66,7 +66,6 @@ const UserType = (props) => {
 
 
 };
-
 
 
 export default withRouter(UserType);

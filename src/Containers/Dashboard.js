@@ -17,7 +17,7 @@ const Dashboard = (props) => {
   const [orgcourses, setOrgCourses] = useState([]);
   const [courses, setCourses] = useState([]);
 
-  
+
   const handleSearch = (e) => {
     let query = e.target.value;
     console.log("Search Courses Value", query);
@@ -63,38 +63,47 @@ const Dashboard = (props) => {
 
           <Card className="dashboardTopBar"
             style={{
-              display: "flex",
-              flexDirection: "row",
               width: "80%",
               marginLeft: "auto",
               marginRight: "auto",
               marginBottom: 20,
-              padding: 20
+              padding: 20,
+              paddingBottom: 30
             }}>
 
-            <TextField
-              id="searchField"
-              label="Search"
-              placeholder="Search for your course"
-              variant="outlined"
-              onChange={handleSearch}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              style={{
-                width: "80%",
-                marginLeft: "auto",
-                marginRight: "auto"
-              }}
-            />
+            <Typography variant="h6" component="h4" style={{ marginBottom: 20 }}>
+              Welcome, {user.displayName} {user && user.userType ? "(" + user.userType + ")" : ""}
+            </Typography>
 
-            {user.userType == "Faculty" &&
-              <Button size="small" variant="contained" color="primary" onClick={() => history.push("/addCourse")}>Add Course</Button>
-            }
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row"
+              }}>
+              <TextField
+                id="searchField"
+                label="Search"
+                placeholder="Search for your course"
+                variant="outlined"
+                onChange={handleSearch}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                style={{
+                  width: "80%",
+                  marginLeft: "auto",
+                  marginRight: "auto"
+                }}
+              />
+
+              {user.userType == "Faculty" &&
+                <Button size="small" variant="contained" color="primary" onClick={() => history.push("/addCourse")}>Add Course</Button>
+              }
+            </div>
           </Card>
 
           {courses.map((course) =>
@@ -123,12 +132,15 @@ const Dashboard = (props) => {
                 </Typography>
 
               </CardContent>
-              <CardActions>
-                <Button size="small" onClick={() => history.push({
-                  pathname: "/dashboard/giveFeedback",
-                  state: { courseDetails: course }
-                })}>Give Feedback</Button>
-              </CardActions>
+
+              {user.userType != "Faculty" &&
+                <CardActions>
+                  <Button disabled={user.userType == "Faculty"} size="small" onClick={() => history.push({
+                    pathname: "/dashboard/giveFeedback",
+                    state: { courseDetails: course }
+                  })}>Give Feedback</Button>
+                </CardActions>
+              }
             </Card>
           )}
         </div>
