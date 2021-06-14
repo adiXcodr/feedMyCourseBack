@@ -23,7 +23,11 @@ const UserType = (props) => {
 
     const handleUserTypeChange = () => {
         if (user) {
-            db.collection("users").doc(user.uid).set({ userType: userType }, { merge: true }).then(() => {
+            db.collection("users").doc(user.uid).set({
+                userType: userType,
+                email: user.email,
+                username: user.displayName
+            }, { merge: true }).then(() => {
                 console.log("Changed usertype to", userType);
                 let newUser = user;
                 newUser.userType = userType;

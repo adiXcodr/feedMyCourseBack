@@ -113,7 +113,8 @@ function MiniDrawer(props) {
             await localStorage.clear();
             dispatch(setAuth(false));
             dispatch(saveUserData(null));
-            history.push("/");
+            // history.push("/");
+            window.location.reload();
         }).catch(function (error) {
             // An error happened.
         })
