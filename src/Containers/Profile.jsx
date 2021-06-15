@@ -2,6 +2,8 @@ import React from 'react';
 import { useLocation, withRouter, Redirect } from 'react-router-dom';
 import { Card, CardActions, CardContent, Button, Typography, TextField, Avatar } from '@material-ui/core';
 import { useSelector } from "react-redux";
+import CoursesAdded from '../Components/CoursesAdded';
+import FeedbacksAdded from '../Components/FeedbacksAdded';
 
 const GiveFeedback = (props) => {
     const { history } = props;
@@ -9,11 +11,14 @@ const GiveFeedback = (props) => {
     const params = location.state;
     const user = useSelector((state) => state.auth.userData);
     if (!user) {
-        <Redirect to="/" />
+        return (
+            <Redirect to="/" />
+        );
     }
     else {
         return (
             <div style={{ marginTop: 30 }}>
+
                 <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, padding: 20 }} >
 
                     <CardContent>
@@ -29,12 +34,19 @@ const GiveFeedback = (props) => {
                             {user.userType}
                         </Typography>
 
-                        <Button size="small" variant="contained" color="primary" style={{ marginTop:20 }} onClick={() => history.push("/changeUsertype")}>
+                        <Button size="small" variant="contained" color="primary" style={{ marginTop: 20 }} onClick={() => history.push("/changeUsertype")}>
                             Change
                         </Button>
                     </CardContent>
 
                 </Card>
+
+                {user.userType == "Faculty" ?
+                    <CoursesAdded />
+                    :
+                    <FeedbacksAdded />
+                }
+
             </div>
 
         );
