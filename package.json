@@ -2,6 +2,11 @@
   "name": "react-responsive-templates",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adiXcodr/feedMyCourseBack"
+  },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
@@ -9,6 +14,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.1.9",
     "firebase": "^8.6.5",
+    "gh-pages": "^3.2.1",
     "moment": "^2.29.1",
     "node-sass": "^6.0.0",
     "react": "^17.0.2",
@@ -27,7 +33,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "gh_deploy": "react-scripts build && gh-pages -b web -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
