@@ -34,7 +34,7 @@ const uiConfig = {
   },
   queryParameterForSignInSuccessUrl: 'signInSuccessUrl',
   signInFlow: 'popup',
-  signInSuccessUrl: '/dashboard',//Specifying sign in success url can cause double redirect since we are also managing redirect in react-router with local state.
+  signInSuccessUrl: window.location.hostname == "localhost" ? '/dashboard' : '/feedMyCourseBack/#/dashboard',//Specifying sign in success url can cause double redirect since we are also managing redirect in react-router with local state.
   signInOptions: [
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -55,7 +55,7 @@ const Landing = () => {
         <React.Fragment>
           <div className={classes.firstcol}>
             <div>
-              <h1 className={classes.heading} style={{color:"black"}}>Feedify</h1>
+              <h1 className={classes.heading} style={{ color: "black" }}>Feedify</h1>
             </div>
 
             <div>
