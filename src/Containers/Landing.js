@@ -55,7 +55,7 @@ const Landing = () => {
         <React.Fragment>
           <div className={classes.firstcol}>
             <div>
-              <h1 className={classes.heading}>Feedify</h1>
+              <h1 className={classes.heading} style={{color:"black"}}>Feedify</h1>
             </div>
 
             <div>

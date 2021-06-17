@@ -8,6 +8,7 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
+import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -28,6 +29,7 @@ import GiveFeedback from "./GiveFeedback";
 import AddCourse from "./AddCourse";
 import UserType from './UserType';
 import Profile from "../Containers/Profile";
+import logo from "../Resources/Images/feedifyLogo.png";
 
 const drawerWidth = 240;
 
@@ -91,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
+    
 }));
 
 function MiniDrawer(props) {
@@ -129,6 +132,7 @@ function MiniDrawer(props) {
                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: open,
                 })}
+                color="white"
             >
                 <Toolbar>
                     <IconButton
@@ -140,10 +144,11 @@ function MiniDrawer(props) {
                             [classes.hide]: open,
                         })}
                     >
-                        <MenuIcon />
+                        {/* <MenuIcon /> */}
+                        <Avatar alt={"FF"} src={logo} style={{ width: 40, height: 40 }} />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Feedify
+                    <Typography variant="h6" noWrap style={{fontWeight:"bold"}}>
+                        FEEDIFY
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -216,7 +221,7 @@ function MiniDrawer(props) {
                 </Switch>
 
             </div>
-        </div>
+        </div >
     );
 }
 

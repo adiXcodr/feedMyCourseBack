@@ -6,6 +6,7 @@ import SelectUserType from "../Components/UserType";
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SearchIcon from '@material-ui/icons/Search';
 import moment from "moment";
+import { isMobile } from "react-device-detect";
 import firebase from "../firebaseHandler";
 const db = firebase.firestore();
 
@@ -78,12 +79,12 @@ const Dashboard = (props) => {
             <div
               style={{
                 display: "flex",
-                flexDirection: "row"
+                flexDirection: isMobile ? "column" : "row"
               }}>
               <TextField
                 id="searchField"
                 label="Search"
-                placeholder="Search for your course"
+                placeholder="Search Course"
                 variant="outlined"
                 onChange={handleSearch}
                 InputProps={{
@@ -96,7 +97,8 @@ const Dashboard = (props) => {
                 style={{
                   width: "80%",
                   marginLeft: "auto",
-                  marginRight: "auto"
+                  marginRight: "auto",
+                  marginBottom: isMobile ? 20 : 0
                 }}
               />
 

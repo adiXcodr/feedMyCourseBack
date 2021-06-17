@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Home from './Containers/Home';
 import classes from './App.module.css';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Provider } from 'react-redux';
 import store from "./redux/store";
@@ -61,7 +61,7 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <React.Fragment>
         <div className={classes.App}>
           <Provider store={store}>
@@ -75,7 +75,7 @@ const App = () => {
           </Provider>
         </div>
       </React.Fragment>
-    </BrowserRouter>
+    </HashRouter>
   );
 
 }
