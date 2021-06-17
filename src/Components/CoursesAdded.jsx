@@ -41,13 +41,13 @@ const CoursesAdded = (props) => {
             <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, padding: 20 }} >
                 <CardContent>
 
-                    <Typography style={{fontSize:25, fontWeight:"bold"}} >
+                    <Typography style={{ fontSize: 25, fontWeight: "bold" }} >
                         Courses Added
                     </Typography>
 
                     {courses && courses.length > 0 ?
                         courses.map((course, idx) =>
-                            <div style={{marginTop:30}}>
+                            <div style={{ marginTop: 30 }}>
                                 <Badge badgeContent={course.courseCredits} color="primary" style={{ float: "right" }}>
                                     <MonetizationOnIcon />
                                 </Badge>
@@ -68,8 +68,20 @@ const CoursesAdded = (props) => {
                                 <Typography >
                                     {moment(course.datePosted).fromNow()}
                                 </Typography>
+
+                                {course.instructorEmail == user.email ?
+                                    <CardActions>
+                                        <Button size="small" onClick={() => history.push({
+                                            pathname: "/addCourse",
+                                            state: { courseCode: course.courseCode }
+                                        })}>Edit Course</Button>
+                                    </CardActions>
+                                    :
+                                    null
+                                }
+
                                 {idx != courses.length - 1 &&
-                                    <Divider variant="middle" style={{marginTop:20}}/>
+                                    <Divider variant="middle" style={{ marginTop: 20 }} />
                                 }
                             </div>
                         )

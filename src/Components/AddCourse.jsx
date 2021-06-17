@@ -16,6 +16,7 @@ const AddCourse = (props) => {
     const [instructorName, setInstructorName] = useState("");
     const [courseCredits, setCourseCredits] = useState("0");
     const [instructorEmail, setInstructorEmail] = useState("");
+    const [edit, setEdit] = useState(false);
 
     const handleAddCourse = () => {
         const datePosted = Date.now();
@@ -38,6 +39,25 @@ const AddCourse = (props) => {
 
     };
 
+    const getEditableDetails = (courseCode) => {
+        setCourseCode(courseCode);
+        setEdit(true);
+        db.collection("courses").doc(courseCode)
+            .get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const toEdit = doc.data();
+                    setName(toEdit.name);
+                    setInstructorName(toEdit.instructorName);
+                    setInstructorEmail(toEdit.instructorEmail);
+                    setCourseCredits(toEdit.courseCredits);
+                }
+            })
+            .catch((error) => {
+                console.log("Error getting added courses: ", error);
+            });
+    };
+
     useEffect(() => {
         if (!user) {
             history.push("/");
@@ -48,6 +68,9 @@ const AddCourse = (props) => {
             }
             setInstructorName(user.displayName);
             setInstructorEmail(user.email);
+            if (params.courseCode) {
+                getEditableDetails(params.courseCode);
+            }
         }
     }, []);
 
@@ -103,7 +126,7 @@ const AddCourse = (props) => {
 
                 </CardContent>
                 <Button variant="contained" color="primary" style={{ marginBottom: 20, marginTop: 20 }} onClick={handleAddCourse}>
-                    Add Course
+                    {edit ? "Edit" : "Add"} Course
                 </Button>
             </Card>
         </div >

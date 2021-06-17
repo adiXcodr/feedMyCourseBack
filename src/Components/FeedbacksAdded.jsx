@@ -21,7 +21,9 @@ const FeedbackAdded = (props) => {
             .then((querySnapshot) => {
                 let feedback = [];
                 querySnapshot.forEach((doc) => {
-                    feedback.push(doc.data());
+                    let obj = doc.data();
+                    obj.id = doc.id;
+                    feedback.push(obj);
                 });
                 console.log("Got added feedback", feedback);
                 setFeedback(feedback);
@@ -60,6 +62,17 @@ const FeedbackAdded = (props) => {
                                 <Typography >
                                     Added {moment(feedback.datePosted).fromNow()}
                                 </Typography>
+
+                                {user.uid == feedback.uid ?
+                                    <CardActions>
+                                        <Button size="small" onClick={() => history.push({
+                                            pathname: "/dashboard/giveFeedback",
+                                            state: { courseDetails: null, feedbackDetails: feedback }
+                                        })}>Edit Feedback</Button>
+                                    </CardActions>
+                                    :
+                                    null}
+
                                 {idx != feedbacks.length - 1 &&
                                     <Divider variant="middle" style={{ marginTop: 20 }} />
                                 }

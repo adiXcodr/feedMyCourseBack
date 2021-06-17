@@ -19,6 +19,8 @@ const GiveFeedback = (props) => {
     const [punctuality, setPunctuality] = useState(1);
     const [additional, setAdditional] = useState("");
     const [query, setQuery] = useState(1);
+    const [edit, setEdit] = useState(false);
+    const [editccode, setEditccode] = useState("");
 
     const marks = [
         {
@@ -39,7 +41,7 @@ const GiveFeedback = (props) => {
         const datePosted = Date.now();
         const toAdd = {
             uid: user.uid,
-            courseCode: course.courseCode,
+            courseCode: course ? course.courseCode : editccode,
             instructor,
             overall,
             content,
@@ -48,14 +50,38 @@ const GiveFeedback = (props) => {
             query,
             datePosted
         };
-        db.collection("feedback").add(toAdd)
-            .then(() => {
-                console.log("Feedback Add Success");
-                history.push("/profile");
-            })
-            .catch((error) => {
-                console.log("Feedback Add Failure", error);
-            });
+        if (edit) {
+            db.collection("feedback").doc(params.feedbackDetails.id).set(toAdd)
+                .then(() => {
+                    console.log("Feedback Add Success");
+                    history.push("/profile");
+                })
+                .catch((error) => {
+                    console.log("Feedback Add Failure", error);
+                });
+        } else {
+            db.collection("feedback").add(toAdd)
+                .then(() => {
+                    console.log("Feedback Add Success");
+                    history.push("/profile");
+                })
+                .catch((error) => {
+                    console.log("Feedback Add Failure", error);
+                });
+        }
+
+    };
+
+    const getEditableDetails = (feedbackDetails) => {
+        console.log("Feedback details are", feedbackDetails)
+        setEditccode(feedbackDetails.courseCode);
+        setEdit(true);
+        setInstructor(Number(feedbackDetails.instructor));
+        setOverall(Number(feedbackDetails.overall));
+        setContent(Number(feedbackDetails.content));
+        setPunctuality(Number(feedbackDetails.punctuality));
+        setAdditional(feedbackDetails.additional);
+        setQuery(Number(feedbackDetails.query));
     };
 
 
@@ -67,6 +93,11 @@ const GiveFeedback = (props) => {
             if (user.userType == "Faculty") {
                 history.push("/dashboard");
             }
+            else {
+                if (params.feedbackDetails) {
+                    getEditableDetails(params.feedbackDetails);
+                }
+            }
         }
     }, []);
 
@@ -75,15 +106,25 @@ const GiveFeedback = (props) => {
             <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, padding: 20 }} >
 
                 <CardContent>
-                    <Typography color="textSecondary" gutterBottom>
-                        {course.courseCode}
-                    </Typography>
-                    <Typography variant="h5" component="h2">
-                        {course.name}
-                    </Typography>
-                    <Typography color="textSecondary">
-                        {course.instructorName} - {course.instructorEmail}
-                    </Typography>
+
+                    {course &&
+                        <div>
+                            <Typography color="textSecondary" gutterBottom>
+                                {course.courseCode}
+                            </Typography>
+                            <Typography variant="h5" component="h2">
+                                {course.name}
+                            </Typography>
+                            <Typography color="textSecondary">
+                                {course.instructorName} - {course.instructorEmail}
+                            </Typography>
+                        </div>
+                    }
+
+                    {edit &&
+                        <Typography variant="h5" component="h2">
+                            {editccode}
+                        </Typography>}
 
                     <div style={{ marginTop: 30 }}>
                         <Typography variant="p" component="p" style={{ textAlign: "left", fontSize: 20 }}>
@@ -101,6 +142,7 @@ const GiveFeedback = (props) => {
                             style={{
                                 marginTop: 40
                             }}
+                            value={content}
                         />
                     </div>
 
@@ -120,6 +162,7 @@ const GiveFeedback = (props) => {
                             style={{
                                 marginTop: 40
                             }}
+                            value={punctuality}
                         />
                     </div>
 
@@ -139,6 +182,7 @@ const GiveFeedback = (props) => {
                             style={{
                                 marginTop: 40
                             }}
+                            value={query}
                         />
                     </div>
 
@@ -158,6 +202,7 @@ const GiveFeedback = (props) => {
                             style={{
                                 marginTop: 40
                             }}
+                            value={instructor}
                         />
                     </div>
 
@@ -177,6 +222,7 @@ const GiveFeedback = (props) => {
                             style={{
                                 marginTop: 40
                             }}
+                            value={overall}
                         />
                     </div>
 
@@ -199,7 +245,7 @@ const GiveFeedback = (props) => {
 
                 </CardContent>
                 <Button variant="contained" color="primary" style={{ marginBottom: 20, marginTop: 20 }} onClick={handleAddFeedback}>
-                    Give Feedback
+                    {edit ? "Edit" : "Give"} Feedback
                 </Button>
             </Card>
         </div>

@@ -133,13 +133,24 @@ const Dashboard = (props) => {
 
               </CardContent>
 
-              {user.userType != "Faculty" &&
+              {user.userType != "Faculty" ?
                 <CardActions>
-                  <Button disabled={user.userType == "Faculty"} size="small" onClick={() => history.push({
+                  <Button size="small" onClick={() => history.push({
                     pathname: "/dashboard/giveFeedback",
                     state: { courseDetails: course }
                   })}>Give Feedback</Button>
                 </CardActions>
+                :
+                (course.instructorEmail == user.email ?
+                  <CardActions>
+                    <Button size="small" onClick={() => history.push({
+                      pathname: "/addCourse",
+                      state: { courseCode: course.courseCode }
+                    })}>Edit Course</Button>
+                  </CardActions>
+                  :
+                  null
+                )
               }
             </Card>
           )}
