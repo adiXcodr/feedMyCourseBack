@@ -68,7 +68,7 @@ const AddCourse = (props) => {
             }
             setInstructorName(user.displayName);
             setInstructorEmail(user.email);
-            if (params.courseCode) {
+            if (params && params.courseCode) {
                 getEditableDetails(params.courseCode);
             }
         }

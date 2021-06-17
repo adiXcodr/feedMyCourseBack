@@ -103,7 +103,10 @@ const Dashboard = (props) => {
               />
 
               {user.userType == "Faculty" &&
-                <Button size="small" variant="contained" color="primary" onClick={() => history.push("/addCourse")}>Add Course</Button>
+                <Button size="small" variant="contained" color="primary" onClick={() => history.push({
+                  pathname: "/addCourse",
+                  state: { courseCode: null }
+                })}>Add Course</Button>
               }
             </div>
           </Card>

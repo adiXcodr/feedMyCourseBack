@@ -4,8 +4,24 @@
 <h3 align="center">Feedify - A simple course feedback system</h3>
 <br>
 
+## Demo
+[Feedify Portal](https://adixcodr.github.io/feedMyCourseBack/#/)
+
+## Screenies
+
+#### Desktop
+![PC1](public/screenshots/pc1.png)
+![PC2](public/screenshots/pc2.png)
+![PC3](public/screenshots/pc3.png)
+
+#### Mobile
+![m1](public/screenshots/mobile3.png)
+![m2](public/screenshots/mobile1.png)
+![m3](public/screenshots/mobile2.png)
+
 ## Technologies used
 * ReactJS
+* Redux
 * Firebase
 
 
