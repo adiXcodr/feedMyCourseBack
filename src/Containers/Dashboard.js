@@ -59,7 +59,7 @@ const Dashboard = (props) => {
 
   return (
     <div style={{ width: "90%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
-      {(user && user.userType ?
+      {(user.userType && user.displayName && user.email && user.displayName != "" && user.email != "" ?
         <div style={{}}>
 
           <Card className="dashboardTopBar"

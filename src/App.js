@@ -66,7 +66,7 @@ const App = () => {
         <div className={classes.App}>
           <Provider store={store}>
             {loading ?
-              <div>Loading...</div>
+              <div class="loader"></div>
               :
               <MuiThemeProvider theme={theme}>
                 <Home />

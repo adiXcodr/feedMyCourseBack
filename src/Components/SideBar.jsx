@@ -20,6 +20,7 @@ import ListItem from '@material-ui/core/ListItem';
 import HomeIcon from '@material-ui/icons/Home';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import firebase from "../firebaseHandler";
@@ -27,6 +28,7 @@ import Landing from "../Containers/Landing";
 import Dashboard from "../Containers/Dashboard";
 import GiveFeedback from "./GiveFeedback";
 import AddCourse from "./AddCourse";
+import Analysis from '../Containers/Analysis';
 import UserType from './UserType';
 import Profile from "../Containers/Profile";
 import logo from "../Resources/Images/feedifyLogo.png";
@@ -93,11 +95,13 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-    
+
 }));
 
 function MiniDrawer(props) {
-    const { loading, loggedin, user, history } = props;
+    const { loading, history } = props;
+    const loggedin = useSelector((state) => state.auth.loggedin);
+    const user = useSelector((state) => state.auth.userData);
     const dispatch = useDispatch();
     const classes = useStyles();
     const theme = useTheme();
@@ -123,6 +127,8 @@ function MiniDrawer(props) {
         })
     };
 
+    
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -147,7 +153,7 @@ function MiniDrawer(props) {
                         {/* <MenuIcon /> */}
                         <Avatar alt={"FF"} src={logo} style={{ width: 40, height: 40 }} />
                     </IconButton>
-                    <Typography variant="h6" noWrap style={{fontWeight:"bold"}}>
+                    <Typography variant="h6" noWrap style={{ fontWeight: "bold" }}>
                         FEEDIFY
                     </Typography>
                 </Toolbar>
@@ -183,6 +189,13 @@ function MiniDrawer(props) {
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary={"Dashboard"} />
                         </ListItem>
+
+                        {user && user.userType == "Faculty" &&
+                            <ListItem button key={"Report"} onClick={() => history.push("/analysis")}>
+                                <ListItemIcon><EqualizerIcon /></ListItemIcon>
+                                <ListItemText primary={"Report"} />
+                            </ListItem>
+                        }
                         <ListItem button key={"Profile"} onClick={() => history.push("/profile")}>
                             <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                             <ListItemText primary={"Profile"} />
@@ -214,6 +227,7 @@ function MiniDrawer(props) {
                 <Switch>
                     <Route path='/' exact render={() => <Landing loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/dashboard' exact render={() => <Dashboard loading={loading} loggedin={loggedin} user={user} />} />
+                    <Route path='/analysis' exact render={() => <Analysis loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/changeUsertype' exact render={() => <UserType loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/dashboard/giveFeedback' exact render={() => <GiveFeedback loading={loading} loggedin={loggedin} user={user} />} />
                     <Route path='/addCourse' exact render={() => <AddCourse loading={loading} loggedin={loggedin} user={user} />} />
