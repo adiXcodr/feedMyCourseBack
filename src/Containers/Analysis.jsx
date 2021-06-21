@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, Badge, Divider, Paper, Grid } from '@material-ui/core';
+import { Card, CardActions, CardContent, Button, Typography, Badge, Divider, Paper, Grid, Select, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from "react-redux";
 import firebase from "../firebaseHandler";
 import classes from '../App.module.css';
 import moment from "moment";
 import { isMobile } from "react-device-detect";
+import CourseBarRanks from '../Components/CourseBarRanks';
 const db = firebase.firestore();
+
+const fields = [
+    { id: "overall", name: "Overall" },
+    { id: "content", name: "Content Provided" },
+    { id: "punctuality", name: "Punctuality" },
+    { id: "query", name: "Class Interaction" },
+    { id: "instructor", name: "Your Impression" },
+]
 
 const Analysis = (props) => {
     const { history } = props;
@@ -20,6 +29,8 @@ const Analysis = (props) => {
     const [mostReviews, setMostReviews] = useState("None");
     const [totalCourses, setTotalCourses] = useState(0);
     const [totalFeedback, setTotalFeedback] = useState(0);
+    const [feedbackField, setFeedbackField] = useState(fields[0].name);
+    const [barChartData, setBarChartData] = useState([]);
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -128,12 +139,37 @@ const Analysis = (props) => {
         setMostReviews(mostReviews);
     };
 
-    const truncateText=(text,len)=>{
-        if(text.length<=len){
+    const truncateText = (text, len) => {
+        if (text.length <= len) {
             return text;
         }
-        else{
-            return text.substring(0,len)+"...";
+        else {
+            return text.substring(0, len) + "...";
+        }
+    };
+
+    const startFieldWiseBarChart = (courses, feedbackField) => {
+        const field = fields.find(o => o.name === feedbackField);
+        if (field) {
+            console.log("Field ID selected is", field.id);
+            let barChartData = [];
+            courses.forEach((course) => {
+                if (course.feedback && course.feedback.length > 0) {
+                    let sum = 0;
+                    course.feedback.forEach((entry) => {
+                        sum += entry[field.id];
+                    });
+                    let avg = sum / course.feedback.length;
+                    barChartData.push({
+                        name: course.name,
+                        score: avg,
+                        courseCode: course.courseCode
+                    });
+                }
+            });
+            if (barChartData && barChartData.length > 0) {
+                setBarChartData(barChartData);
+            }
         }
     };
 
@@ -144,13 +180,20 @@ const Analysis = (props) => {
     useEffect(() => {
         if (courses && courses.length > 0) {
             startSetDashboardData(courses);
+            startFieldWiseBarChart(courses, feedbackField);
         }
     }, [courses]);
 
-    return (
-        <div style={{ marginTop: 30 }}>
+    useEffect(() => {
+        if (courses && courses.length > 0) {
+            startFieldWiseBarChart(courses, feedbackField);
+        }
+    }, [feedbackField]);
 
-            <div style={{ width: "90%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20 }} >
+    return (
+        <div style={{ marginTop: 30, width: "90%", marginLeft: "auto", marginRight: "auto" }}>
+
+            <div style={{ width: "100%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20 }} >
 
                 <Grid container className={classes.root} spacing={2} justify="center">
                     <Grid item xs={12} >
@@ -159,7 +202,7 @@ const Analysis = (props) => {
                                 <Card style={{
                                     padding: 20,
                                 }}>
-                                    <Typography style={{fontSize:17, fontWeight:"bold"}}>Courses Added</Typography>
+                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Courses Added</Typography>
                                     <Typography>{totalCourses}</Typography>
                                 </Card>
                             </Grid>
@@ -167,7 +210,7 @@ const Analysis = (props) => {
                                 <Card style={{
                                     padding: 20,
                                 }}>
-                                    <Typography style={{fontSize:17, fontWeight:"bold"}}>Feedback Recieved</Typography>
+                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Feedback Recieved</Typography>
                                     <Typography>{totalFeedback}</Typography>
                                 </Card>
                             </Grid>
@@ -175,16 +218,16 @@ const Analysis = (props) => {
                                 <Card style={{
                                     padding: 20,
                                 }}>
-                                    <Typography style={{fontSize:17, fontWeight:"bold"}}>Highest Rated Course</Typography>
-                                    <Typography>{truncateText(topRated,30)}</Typography>
+                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Highest Rated Course</Typography>
+                                    <Typography>{truncateText(topRated, 30)}</Typography>
                                 </Card>
                             </Grid>
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
                                 }}>
-                                    <Typography style={{fontSize:17, fontWeight:"bold"}}>Most Reviewed Course</Typography>
-                                    <Typography >{truncateText(mostReviews,30)}</Typography>
+                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Most Reviewed Course</Typography>
+                                    <Typography >{truncateText(mostReviews, 30)}</Typography>
                                 </Card>
                             </Grid>
                         </Grid>
@@ -194,6 +237,32 @@ const Analysis = (props) => {
 
 
             </div>
+
+
+            {courses && courses.length > 0 ?
+                <Card style={{ width: "100%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20, padding: 20 }} >
+                    <Select
+                        labelId="field-select-label"
+                        id="field-select"
+                        value={feedbackField}
+                        onChange={(e) => setFeedbackField(e.target.value)}
+                        variant="outlined"
+                        style={{ width: "100%", marginBottom: 30, textAlign: "left" }}
+                    >
+                        {fields.map((val) => <MenuItem value={val.name}>{val.name}</MenuItem>)}
+                    </Select>
+
+                    {barChartData && barChartData.length > 0 ?
+                        <CourseBarRanks data={barChartData} />
+                        :
+                        null
+                    }
+
+                </Card>
+                :
+                null
+            }
+
         </div>
 
     );

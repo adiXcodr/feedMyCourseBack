@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { Card, CardActions, CardContent, Button, Typography, Badge, TextField, InputAdornment } from '@material-ui/core';
 import { useSelector, useDispatch } from "react-redux";
 import SelectUserType from "../Components/UserType";
@@ -57,115 +57,123 @@ const Dashboard = (props) => {
     }
   }, [loggedin]);
 
-  return (
-    <div style={{ width: "90%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
-      {(user.userType && user.displayName && user.email && user.displayName != "" && user.email != "" ?
-        <div style={{}}>
+  if (user) {
 
-          <Card className="dashboardTopBar"
-            style={{
-              width: "80%",
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginBottom: 20,
-              padding: 20,
-              paddingBottom: 30
-            }}>
+    return (
+      <div style={{ width: "90%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
+        {(user.userType && user.displayName && user.email && user.displayName != "" && user.email != "" ?
+          <div style={{}}>
 
-            <Typography variant="h6" component="h4" style={{ marginBottom: 20 }}>
-              Welcome, {user.displayName} {user && user.userType ? "(" + user.userType + ")" : ""}
-            </Typography>
-
-            <div
+            <Card className="dashboardTopBar"
               style={{
-                display: "flex",
-                flexDirection: isMobile ? "column" : "row"
+                width: "80%",
+                marginLeft: "auto",
+                marginRight: "auto",
+                marginBottom: 20,
+                padding: 20,
+                paddingBottom: 30
               }}>
-              <TextField
-                id="searchField"
-                label="Search"
-                placeholder="Search Course"
-                variant="outlined"
-                onChange={handleSearch}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
+
+              <Typography variant="h6" component="h4" style={{ marginBottom: 20 }}>
+                Welcome, {user.displayName} {user && user.userType ? "(" + user.userType + ")" : ""}
+              </Typography>
+
+              <div
                 style={{
-                  width: "80%",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  marginBottom: isMobile ? 20 : 0
-                }}
-              />
+                  display: "flex",
+                  flexDirection: isMobile ? "column" : "row"
+                }}>
+                <TextField
+                  id="searchField"
+                  label="Search"
+                  placeholder="Search Course"
+                  variant="outlined"
+                  onChange={handleSearch}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  style={{
+                    width: "80%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    marginBottom: isMobile ? 20 : 0
+                  }}
+                />
 
-              {user.userType == "Faculty" &&
-                <Button size="small" variant="contained" color="primary" onClick={() => history.push({
-                  pathname: "/addCourse",
-                  state: { courseCode: null }
-                })}>Add Course</Button>
-              }
-            </div>
-          </Card>
+                {user.userType == "Faculty" &&
+                  <Button size="small" variant="contained" color="primary" onClick={() => history.push({
+                    pathname: "/addCourse",
+                    state: { courseCode: null }
+                  })}>Add Course</Button>
+                }
+              </div>
+            </Card>
 
-          {courses.map((course) =>
-            <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }} >
+            {courses.map((course) =>
+              <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }} >
 
-              <CardContent>
-                <Badge badgeContent={course.courseCredits} color="primary" style={{ float: "right" }}>
-                  <MonetizationOnIcon />
-                </Badge>
-                <Typography color="textSecondary" gutterBottom>
-                  {course.courseCode}
-                </Typography>
-                <Typography variant="h5" component="h2">
-                  {course.name}
-                </Typography>
+                <CardContent>
+                  <Badge badgeContent={course.courseCredits} color="primary" style={{ float: "right" }}>
+                    <MonetizationOnIcon />
+                  </Badge>
+                  <Typography color="textSecondary" gutterBottom>
+                    {course.courseCode}
+                  </Typography>
+                  <Typography variant="h5" component="h2">
+                    {course.name}
+                  </Typography>
 
-                <Typography variant="h6" component="h4" color="textSecondary">
-                  Posted By
-                </Typography>
-                <Typography >
-                  {course.instructorName} - {course.instructorEmail}
-                </Typography>
+                  <Typography variant="h6" component="h4" color="textSecondary">
+                    Posted By
+                  </Typography>
+                  <Typography >
+                    {course.instructorName} - {course.instructorEmail}
+                  </Typography>
 
-                <Typography >
-                  {moment(course.datePosted).fromNow()}
-                </Typography>
+                  <Typography >
+                    {moment(course.datePosted).fromNow()}
+                  </Typography>
 
-              </CardContent>
+                </CardContent>
 
-              {user.userType != "Faculty" ?
-                <CardActions>
-                  <Button size="small" onClick={() => history.push({
-                    pathname: "/dashboard/giveFeedback",
-                    state: { courseDetails: course }
-                  })}>Give Feedback</Button>
-                </CardActions>
-                :
-                (course.instructorEmail == user.email ?
+                {user.userType != "Faculty" ?
                   <CardActions>
                     <Button size="small" onClick={() => history.push({
-                      pathname: "/addCourse",
-                      state: { courseCode: course.courseCode }
-                    })}>Edit Course</Button>
+                      pathname: "/dashboard/giveFeedback",
+                      state: { courseDetails: course }
+                    })}>Give Feedback</Button>
                   </CardActions>
                   :
-                  null
-                )
-              }
-            </Card>
-          )}
-        </div>
-        :
-        <SelectUserType user={user} />
-      )
-      }
-    </div>
+                  (course.instructorEmail == user.email ?
+                    <CardActions>
+                      <Button size="small" onClick={() => history.push({
+                        pathname: "/addCourse",
+                        state: { courseCode: course.courseCode }
+                      })}>Edit Course</Button>
+                    </CardActions>
+                    :
+                    null
+                  )
+                }
+              </Card>
+            )}
+          </div>
+          :
+          <SelectUserType user={user} />
+        )
+        }
+      </div>
 
-  );
+    );
+  }
+  else {
+    return (
+      <Redirect to="/" />
+    );
+  }
 }
 export default withRouter(Dashboard);

@@ -31,10 +31,7 @@ const UserType = (props) => {
                 username: displayName == "" ? user.displayName : displayName
             }, { merge: true }).then(() => {
                 console.log("Changed usertype to", userType);
-                let newUser = user;
-                newUser.userType = userType;
-                dispatch(saveUserData(newUser));
-                history.push("/profile");
+                window.location.reload();
             }).catch((err) => {
                 console.log("Could not change user-type", err);
             });
@@ -44,6 +41,9 @@ const UserType = (props) => {
     useEffect(() => {
         if (!user) {
             history.push("/");
+        }
+        else {
+            console.log("User in usertype selection", user)
         }
     }, []);
 
@@ -60,7 +60,7 @@ const UserType = (props) => {
             <p style={{ fontSize: 30, marginBottom: 30 }}>Help us know you better.</p>
             <p style={{ fontSize: 15 }}>Who are you?</p>
 
-            {!user.displayName || user.displayName == "" &&
+            {!user.displayName || user.displayName == "" ?
                 <TextField
                     id="name"
                     label="Name"
@@ -72,9 +72,10 @@ const UserType = (props) => {
                         marginTop: 20
                     }}
                 />
+                : null
             }
 
-            {!user.email || user.email == "" &&
+            {!user.email || user.email == "" ?
                 <TextField
                     id="email"
                     label="Email"
@@ -87,6 +88,7 @@ const UserType = (props) => {
                         marginBottom: 20
                     }}
                 />
+                : null
             }
             <Select
                 labelId="userType-select-label"
@@ -94,7 +96,7 @@ const UserType = (props) => {
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
                 variant="outlined"
-                style={{ width: "100%", marginBottom: 30 }}
+                style={{ width: "100%", marginBottom: 30, textAlign:"left" }}
             >
                 {allUserTypes.map((val) => <MenuItem value={val}>{val}</MenuItem>)}
             </Select>
