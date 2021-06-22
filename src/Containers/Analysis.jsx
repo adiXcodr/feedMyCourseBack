@@ -8,6 +8,8 @@ import classes from '../App.module.css';
 import moment from "moment";
 import { isMobile } from "react-device-detect";
 import CourseBarRanks from '../Components/CourseBarRanks';
+import FeedbackTable from "../Components/FeedbackTable";
+import { colors } from "../constants";
 const db = firebase.firestore();
 
 const fields = [
@@ -31,6 +33,8 @@ const Analysis = (props) => {
     const [totalFeedback, setTotalFeedback] = useState(0);
     const [feedbackField, setFeedbackField] = useState(fields[0].name);
     const [barChartData, setBarChartData] = useState([]);
+    const [activeCourse, setActiveCourse] = useState("");
+    const [activefeedback, setActiveFeedback] = useState([]);
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -173,12 +177,24 @@ const Analysis = (props) => {
         }
     };
 
+    const startSetActiveFeedback = (courses, name) => {
+        setActiveCourse(name);
+        const course = courses.find(o => o.courseCode === name);
+        if (course) {
+            let feedback = course.feedback;
+            if (feedback) {
+                setActiveFeedback(feedback);
+            }
+        }
+    };
+
     useEffect(() => {
         getAnalysis();
     }, []);
 
     useEffect(() => {
         if (courses && courses.length > 0) {
+            startSetActiveFeedback(courses, courses[0].courseCode);
             startSetDashboardData(courses);
             startFieldWiseBarChart(courses, feedbackField);
         }
@@ -195,12 +211,13 @@ const Analysis = (props) => {
 
             <div style={{ width: "100%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20 }} >
 
-                <Grid container className={classes.root} spacing={2} justify="center">
+                <Grid container className={classes.root} spacing={2} justify="center" >
                     <Grid item xs={12} >
                         <Grid container justify="center" spacing={2}>
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
+                                    backgroundColor: colors.primary
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Courses Added</Typography>
                                     <Typography>{totalCourses}</Typography>
@@ -209,6 +226,7 @@ const Analysis = (props) => {
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
+                                    backgroundColor: colors.primary
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Feedback Recieved</Typography>
                                     <Typography>{totalFeedback}</Typography>
@@ -217,6 +235,7 @@ const Analysis = (props) => {
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
+                                    backgroundColor: colors.primary
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Highest Rated Course</Typography>
                                     <Typography>{truncateText(topRated, 30)}</Typography>
@@ -225,6 +244,7 @@ const Analysis = (props) => {
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
+                                    backgroundColor: colors.primary
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Most Reviewed Course</Typography>
                                     <Typography >{truncateText(mostReviews, 30)}</Typography>
@@ -240,7 +260,7 @@ const Analysis = (props) => {
 
 
             {courses && courses.length > 0 ?
-                <Card style={{ width: "100%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20, padding: 20 }} >
+                <Card style={{ width: "100%", marginBottom: 20, marginTop: 20, padding: 20, overflowX: "scroll" }} >
                     <Select
                         labelId="field-select-label"
                         id="field-select"
@@ -257,6 +277,30 @@ const Analysis = (props) => {
                         :
                         null
                     }
+
+                </Card>
+                :
+                null
+            }
+
+
+            {courses && courses.length > 0 ?
+                <Card style={{ width: "100%", marginBottom: 20, marginTop: 20, padding: 20, maxWidth:"100%" }} >
+                    <Select
+                        labelId="field-select-label"
+                        id="field-select"
+                        value={activeCourse}
+                        onChange={(e) => startSetActiveFeedback(courses, e.target.value)}
+                        variant="outlined"
+                        style={{ width: "100%", marginBottom: 30, textAlign: "left" }}
+                    >
+                        {courses.map((val) => <MenuItem value={val.courseCode}>{val.courseCode}</MenuItem>)}
+                    </Select>
+
+                    
+
+                    <FeedbackTable feedback={activefeedback} />
+
 
                 </Card>
                 :

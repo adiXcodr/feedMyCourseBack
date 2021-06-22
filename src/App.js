@@ -7,15 +7,16 @@ import { Provider } from 'react-redux';
 import store from "./redux/store";
 import { setAuth, saveUserData } from "./redux/actions";
 import firebase from "./firebaseHandler";
+import { colors } from "./constants";
 const db = firebase.firestore();
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#FFCB2B'
+      main: colors.primary
     },
     secondary: {
-      main: '#059BE5'
+      main: colors.secondary
     }
   }
 });

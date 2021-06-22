@@ -9,6 +9,12 @@ const firebaseConfig = {
     measurementId: "G-TKQZRCT7Q4"
 };
 
+const colors = {
+    primary: '#FFCB2B',
+    secondary: '#8884d8'
+}
+
 export {
-    firebaseConfig
+    firebaseConfig,
+    colors
 };
