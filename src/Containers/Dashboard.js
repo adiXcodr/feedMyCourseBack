@@ -69,9 +69,15 @@ const Dashboard = (props) => {
                 width: "80%",
                 marginLeft: "auto",
                 marginRight: "auto",
-                marginBottom: 20,
+                marginBottom: 50,
                 padding: 20,
-                paddingBottom: 30
+                paddingBottom: 50,
+                transition: "0.3s",
+                boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                "&:hover": {
+                  boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                },
+                borderRadius: 30
               }}>
 
               <Typography variant="h6" component="h4" style={{ marginBottom: 20 }}>
@@ -114,7 +120,20 @@ const Dashboard = (props) => {
             </Card>
 
             {courses.map((course) =>
-              <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }} >
+              <Card style={{
+                width: "80%",
+                marginLeft: "auto",
+                marginRight: "auto",
+                marginBottom: 50,
+                transition: "0.3s",
+                boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                "&:hover": {
+                  boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                },
+                borderRadius: 30,
+                padding: 20,
+                paddingTop:30
+              }} >
 
                 <CardContent>
                   <Badge badgeContent={course.courseCredits} color="primary" style={{ float: "right" }}>
@@ -148,16 +167,13 @@ const Dashboard = (props) => {
                     })}>Give Feedback</Button>
                   </CardActions>
                   :
-                  (course.instructorEmail == user.email ?
-                    <CardActions>
-                      <Button size="small" onClick={() => history.push({
-                        pathname: "/addCourse",
-                        state: { courseCode: course.courseCode }
-                      })}>Edit Course</Button>
-                    </CardActions>
-                    :
-                    null
-                  )
+                  <CardActions>
+                    <Button disabled={course.instructorEmail != user.email} size="small" onClick={() => history.push({
+                      pathname: "/addCourse",
+                      state: { courseCode: course.courseCode }
+                    })}>Edit Course</Button>
+                  </CardActions>
+
                 }
               </Card>
             )}

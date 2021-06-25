@@ -260,7 +260,22 @@ const Analysis = (props) => {
 
 
             {courses && courses.length > 0 ?
-                <Card style={{ width: "100%", marginBottom: 20, marginTop: 20, padding: 20, overflowX: "scroll" }} >
+                <Card style={{
+                    width: "100%",
+                    marginBottom: 20,
+                    marginTop: 20,
+                    padding: 20,
+                    overflowX: "scroll",
+                    marginBottom: 50,
+                    transition: "0.3s",
+                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                    "&:hover": {
+                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                    },
+                    borderRadius: 30,
+                    padding: 30,
+                    paddingTop: 40
+                }} >
                     <Select
                         labelId="field-select-label"
                         id="field-select"
@@ -285,7 +300,22 @@ const Analysis = (props) => {
 
 
             {courses && courses.length > 0 ?
-                <Card style={{ width: "100%", marginBottom: 20, marginTop: 20, padding: 20, maxWidth:"100%" }} >
+                <Card style={{
+                    width: "100%",
+                    marginBottom: 20,
+                    marginTop: 20,
+                    padding: 20,
+                    maxWidth: "100%",
+                    marginBottom: 50,
+                    transition: "0.3s",
+                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                    "&:hover": {
+                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                    },
+                    borderRadius: 30,
+                    padding: 30,
+                    paddingTop: 30
+                }} >
                     <Select
                         labelId="field-select-label"
                         id="field-select"
@@ -297,7 +327,7 @@ const Analysis = (props) => {
                         {courses.map((val) => <MenuItem value={val.courseCode}>{val.courseCode}</MenuItem>)}
                     </Select>
 
-                    
+
 
                     <FeedbackTable feedback={activefeedback} />
 

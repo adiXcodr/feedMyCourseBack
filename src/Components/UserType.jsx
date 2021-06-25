@@ -55,7 +55,16 @@ const UserType = (props) => {
             marginTop: 40,
             padding: 20,
             paddingLeft: "5%",
-            paddingRight: "5%"
+            paddingRight: "5%",
+            marginBottom: 50,
+            transition: "0.3s",
+            boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+            "&:hover": {
+                boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+            },
+            borderRadius: 30,
+            padding: 20,
+            paddingTop: 30
         }}>
             <p style={{ fontSize: 30, marginBottom: 30 }}>Help us know you better.</p>
             <p style={{ fontSize: 15 }}>Who are you?</p>
@@ -96,7 +105,7 @@ const UserType = (props) => {
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
                 variant="outlined"
-                style={{ width: "100%", marginBottom: 30, textAlign:"left" }}
+                style={{ width: "100%", marginBottom: 30, textAlign: "left" }}
             >
                 {allUserTypes.map((val) => <MenuItem value={val}>{val}</MenuItem>)}
             </Select>

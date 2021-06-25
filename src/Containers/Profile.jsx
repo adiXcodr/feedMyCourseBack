@@ -19,7 +19,22 @@ const GiveFeedback = (props) => {
         return (
             <div style={{ marginTop: 30 }}>
 
-                <Card style={{ width: "80%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, padding: 20 }} >
+                <Card style={{
+                    width: "80%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    marginBottom: 50,
+                    padding: 20,
+                    marginBottom: 50,
+                    transition: "0.3s",
+                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                    "&:hover": {
+                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                    },
+                    borderRadius: 30,
+                    padding: 20,
+                    paddingTop: 30
+                }} >
 
                     <CardContent>
                         <Avatar alt={user.displayName} src={user.photoURL} style={{ width: 100, height: 100, marginLeft: "auto", marginRight: "auto", marginBottom: 20 }} />
