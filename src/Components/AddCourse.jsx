@@ -95,19 +95,20 @@ const AddCourse = (props) => {
                         }}
                         value={name}
                     />
-
-                    <TextField
-                        id="courseCode"
-                        label="Course Code"
-                        placeholder="Enter the course code"
-                        variant="outlined"
-                        onChange={(e) => setCourseCode(e.target.value)}
-                        style={{
-                            width: "100%",
-                            marginTop: 20
-                        }}
-                        value={courseCode}
-                    />
+                    {!edit &&
+                        <TextField
+                            id="courseCode"
+                            label="Course Code"
+                            placeholder="Enter the course code"
+                            variant="outlined"
+                            onChange={(e) => setCourseCode(e.target.value)}
+                            style={{
+                                width: "100%",
+                                marginTop: 20
+                            }}
+                            value={courseCode}
+                        />
+                    }
 
 
                     <TextField

@@ -99,11 +99,6 @@ export default function BasicTable(props) {
         <Paper className={classes.root} style={{width:"100%", maxWidth:isMobile?250:"100%", overflowX:"auto", marginLeft:"auto", marginRight:"auto"}}>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
-                    {/* <colgroup>
-                        <col style={{ width: '50%' }} />
-                        <col style={{ width: '25%' }} />
-                        <col style={{ width: '25%' }} />
-                    </colgroup> */}
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Overall</StyledTableCell>
