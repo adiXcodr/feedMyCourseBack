@@ -217,7 +217,13 @@ const Analysis = (props) => {
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
-                                    backgroundColor: colors.primary
+                                    backgroundColor: colors.primary,
+                                    transition: "0.3s",
+                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                    "&:hover": {
+                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                                    },
+                                    borderRadius: 30,
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Courses Added</Typography>
                                     <Typography>{totalCourses}</Typography>
@@ -226,7 +232,13 @@ const Analysis = (props) => {
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
-                                    backgroundColor: colors.primary
+                                    backgroundColor: colors.primary,
+                                    transition: "0.3s",
+                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                    "&:hover": {
+                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                                    },
+                                    borderRadius: 30,
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Feedback Recieved</Typography>
                                     <Typography>{totalFeedback}</Typography>
@@ -235,7 +247,13 @@ const Analysis = (props) => {
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
-                                    backgroundColor: colors.primary
+                                    backgroundColor: colors.primary,
+                                    transition: "0.3s",
+                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                    "&:hover": {
+                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                                    },
+                                    borderRadius: 30,
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Highest Rated Course</Typography>
                                     <Typography>{truncateText(topRated, 30)}</Typography>
@@ -244,7 +262,13 @@ const Analysis = (props) => {
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
-                                    backgroundColor: colors.primary
+                                    backgroundColor: colors.primary,
+                                    transition: "0.3s",
+                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                    "&:hover": {
+                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
+                                    },
+                                    borderRadius: 30,
                                 }}>
                                     <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Most Reviewed Course</Typography>
                                     <Typography >{truncateText(mostReviews, 30)}</Typography>
@@ -263,7 +287,7 @@ const Analysis = (props) => {
                 <Card style={{
                     width: "100%",
                     marginBottom: 20,
-                    marginTop: 20,
+                    marginTop: 40,
                     padding: 20,
                     overflowX: "scroll",
                     marginBottom: 50,

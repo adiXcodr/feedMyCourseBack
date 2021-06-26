@@ -31,6 +31,7 @@ const UserType = (props) => {
                 username: displayName == "" ? user.displayName : displayName
             }, { merge: true }).then(() => {
                 console.log("Changed usertype to", userType);
+                history.push("/dashboard");
                 window.location.reload();
             }).catch((err) => {
                 console.log("Could not change user-type", err);

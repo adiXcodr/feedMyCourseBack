@@ -60,13 +60,13 @@ const Dashboard = (props) => {
   if (user) {
 
     return (
-      <div style={{ width: "90%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
+      <div style={{ width: isMobile ? "90%" : "80%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
         {(user.userType && user.displayName && user.email && user.displayName != "" && user.email != "" ?
           <div style={{}}>
 
             <Card className="dashboardTopBar"
               style={{
-                width: "80%",
+                width: "100%",
                 marginLeft: "auto",
                 marginRight: "auto",
                 marginBottom: 50,
@@ -121,7 +121,7 @@ const Dashboard = (props) => {
 
             {courses.map((course) =>
               <Card style={{
-                width: "80%",
+                width: "100%",
                 marginLeft: "auto",
                 marginRight: "auto",
                 marginBottom: 50,
@@ -132,7 +132,7 @@ const Dashboard = (props) => {
                 },
                 borderRadius: 30,
                 padding: 20,
-                paddingTop:30
+                paddingTop: 30
               }} >
 
                 <CardContent>

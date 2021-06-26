@@ -35,8 +35,7 @@ const useStyles = makeStyles({
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
-        backgroundColor: theme.palette.secondary.main,
-        color: theme.palette.common.white,
+
         fontSize: 17,
         fontWeight: 600,
         border: 'none'
@@ -44,6 +43,7 @@ const StyledTableCell = withStyles((theme) => ({
     body: {
         fontSize: 20,
         fontWeight: 'bold',
+        borderWidth: 0
     },
 }))(TableCell);
 
@@ -96,7 +96,7 @@ export default function BasicTable(props) {
     };
 
     return (
-        <Paper className={classes.root} style={{width:"100%", maxWidth:isMobile?250:"100%", overflowX:"auto", marginLeft:"auto", marginRight:"auto"}}>
+        <Paper className={classes.root} style={{ width: "100%", maxWidth: isMobile ? 250 : "100%", overflowX: "auto", marginLeft: "auto", marginRight: "auto" }}>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -121,7 +121,7 @@ export default function BasicTable(props) {
                 </Table>
             </TableContainer>
             <TablePagination
-                rowsPerPageOptions={[5,10]}
+                rowsPerPageOptions={[5, 10]}
                 component="div"
                 count={feedback.length}
                 rowsPerPage={rowsPerPage}
