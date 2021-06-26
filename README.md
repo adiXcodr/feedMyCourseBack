@@ -17,8 +17,6 @@
 
 #### Mobile
 ![m1](public/screenshots/mobile3.png)
-![m2](public/screenshots/mobile1.png)
-![m3](public/screenshots/mobile2.png)
 ![m4](public/screenshots/mobile4.png)
 
 ## Technologies used
