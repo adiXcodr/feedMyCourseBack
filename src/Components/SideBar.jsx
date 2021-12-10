@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { saveUserData, setAuth } from "../redux/actions";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Route, Link, Switch, withRouter } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -95,7 +96,6 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-
 }));
 
 function MiniDrawer(props) {
@@ -106,12 +106,15 @@ function MiniDrawer(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = useState(false);
+    const [minWidth, setMinWidth] = useState('1224px');
 
     const handleDrawerOpen = () => {
+        setMinWidth('0px');
         setOpen(true);
     };
 
     const handleDrawerClose = () => {
+        setMinWidth('1224px');
         setOpen(false);
     };
 
@@ -127,7 +130,12 @@ function MiniDrawer(props) {
         })
     };
 
-    
+    const isDesktopOrLaptop = useMediaQuery(
+    {
+        query: `(min-width: ${minWidth})`
+    }
+    );
+
 
     return (
         <div className={classes.root}>
@@ -159,7 +167,7 @@ function MiniDrawer(props) {
                 </Toolbar>
             </AppBar>
 
-
+        { isDesktopOrLaptop &&
             <Drawer
                 variant="permanent"
                 className={clsx(classes.drawer, {
@@ -181,38 +189,38 @@ function MiniDrawer(props) {
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
                 </div>
+                
                 <Divider />
-                {loggedin ?
-                    <List>
-
-                        <ListItem button key={"Dashboard"} onClick={() => history.push("/dashboard")}>
-                            <ListItemIcon><HomeIcon /></ListItemIcon>
-                            <ListItemText primary={"Dashboard"} />
-                        </ListItem>
-
-                        {user && user.userType == "Faculty" &&
-                            <ListItem button key={"Report"} onClick={() => history.push("/analysis")}>
-                                <ListItemIcon><EqualizerIcon /></ListItemIcon>
-                                <ListItemText primary={"Report"} />
+                    { loggedin ?
+                        <List>
+                            <ListItem button key={"Dashboard"} onClick={() => history.push("/dashboard")}>
+                                <ListItemIcon><HomeIcon /></ListItemIcon>
+                                <ListItemText primary={"Dashboard"} />
                             </ListItem>
-                        }
-                        <ListItem button key={"Profile"} onClick={() => history.push("/profile")}>
-                            <ListItemIcon><AccountCircleIcon /></ListItemIcon>
-                            <ListItemText primary={"Profile"} />
-                        </ListItem>
 
-                    </List>
-                    :
-                    <List>
+                            {user && user.userType == "Faculty" &&
+                                <ListItem button key={"Report"} onClick={() => history.push("/analysis")}>
+                                    <ListItemIcon><EqualizerIcon /></ListItemIcon>
+                                    <ListItemText primary={"Report"} />
+                                </ListItem>
+                            }
+                            <ListItem button key={"Profile"} onClick={() => history.push("/profile")}>
+                                <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+                                <ListItemText primary={"Profile"} />
+                            </ListItem>
+                        </List>
+                        :
+                        <List>
 
-                        <ListItem button key={"Home"} onClick={() => history.push("/")}>
-                            <ListItemIcon><HomeIcon /></ListItemIcon>
-                            <ListItemText primary={"Home"} />
-                        </ListItem>
+                            <ListItem button key={"Home"} onClick={() => history.push("/")}>
+                                <ListItemIcon><HomeIcon /></ListItemIcon>
+                                <ListItemText primary={"Home"} />
+                            </ListItem>
 
-                    </List>
-                }
+                        </List>
+                    }
                 <Divider />
+        
                 {loggedin &&
                     <List>
                         <ListItem button key={"Log Out"} onClick={singOutUser}>
@@ -222,6 +230,8 @@ function MiniDrawer(props) {
                     </List>
                 }
             </Drawer>
+        }
+       
 
             <div style={{ marginTop: "10vh", width: "100%" }}>
                 <Switch>
