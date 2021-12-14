@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Home from './Containers/Home';
 import classes from './App.module.css';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider, StyledEngineProvider, createTheme, adaptV4Theme } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import store from "./redux/store";
 import { setAuth, saveUserData } from "./redux/actions";
@@ -10,7 +10,7 @@ import firebase from "./firebaseHandler";
 import { colors } from "./constants";
 const db = firebase.firestore();
 
-const theme = createMuiTheme({
+const theme = createTheme(adaptV4Theme({
   palette: {
     primary: {
       main: colors.primary
@@ -19,7 +19,7 @@ const theme = createMuiTheme({
       main: colors.secondary
     }
   }
-});
+}));
 
 const App = () => {
 
@@ -63,19 +63,21 @@ const App = () => {
 
   return (
     <HashRouter>
-      <React.Fragment>
+      <>
         <div className={classes.App}>
           <Provider store={store}>
             {loading ?
               <div class="loader"></div>
               :
-              <MuiThemeProvider theme={theme}>
-                <Home />
-              </MuiThemeProvider>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                  <Home />
+                </ThemeProvider>
+              </StyledEngineProvider>
             }
           </Provider>
         </div>
-      </React.Fragment>
+      </>
     </HashRouter>
   );
 

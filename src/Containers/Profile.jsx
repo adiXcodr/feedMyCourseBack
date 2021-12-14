@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, withRouter, Redirect } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, TextField, Avatar } from '@material-ui/core';
+import { Card, CardActions, CardContent, Button, Typography, TextField, Avatar } from '@mui/material';
 import { useSelector } from "react-redux";
 import CoursesAdded from '../Components/CoursesAdded';
 import FeedbacksAdded from '../Components/FeedbacksAdded';

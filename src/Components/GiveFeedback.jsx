@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classes from './GiveFeedback.module.css';
 import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, TextField, Slider, Tooltip } from '@material-ui/core';
+import { Card, CardActions, CardContent, Button, Typography, TextField, Slider, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
 import firebase from "../firebaseHandler";
 const db = firebase.firestore();

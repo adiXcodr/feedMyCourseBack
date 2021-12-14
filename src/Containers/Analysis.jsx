@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, Badge, Divider, Paper, Grid, Select, MenuItem } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Card, CardActions, CardContent, Button, Typography, Badge, Divider, Paper, Grid, Select, MenuItem } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from "react-redux";
 import firebase from "../firebaseHandler";
 import classes from '../App.module.css';
@@ -211,9 +211,9 @@ const Analysis = (props) => {
 
             <div style={{ width: "100%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20 }} >
 
-                <Grid container className={classes.root} spacing={2} justify="center" >
+                <Grid container className={classes.root} spacing={2} justifyContent="center" >
                     <Grid item xs={12} >
-                        <Grid container justify="center" spacing={2}>
+                        <Grid container justifyContent="center" spacing={2}>
                             <Grid item xs={12} lg={3}>
                                 <Card style={{
                                     padding: 20,
@@ -362,7 +362,6 @@ const Analysis = (props) => {
             }
 
         </div>
-
     );
 
 }

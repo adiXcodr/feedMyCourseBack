@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, Badge, Divider } from '@material-ui/core';
+import { Card, CardActions, CardContent, Button, Typography, Badge, Divider } from '@mui/material';
 import { useSelector } from "react-redux";
 import firebase from "../firebaseHandler";
 import moment from "moment";
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 const db = firebase.firestore();
 
 const CoursesAdded = (props) => {
