@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import withStyles from '@mui/styles/withStyles';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,48 +16,37 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { isMobile } from 'react-device-detect';
 
-const useStyles = makeStyles({
-    root: {
+const PREFIX = 'FeedbackTable';
+
+const classes = {
+    head: `${PREFIX}-head`,
+    body: `${PREFIX}-body`,
+    head2: `${PREFIX}-head2`,
+    root: `${PREFIX}-root`,
+    container: `${PREFIX}-container`,
+    title: `${PREFIX}-title`
+};
+
+const StyledPaper = styled(Paper)({
+    [`&.${classes.root}`]: {
         boxShadow: 'none',
         borderRadius: '10px 10px 0px 0px'
 
     },
-    container: {
+    [`& .${classes.container}`]: {
         maxHeight: 500,
         borderRadius: '10px 10px 0px 0px'
 
     },
-    title: {
+    [`& .${classes.title}`]: {
         width: '100%',
         fontWeight: '600',
     },
 });
 
-const StyledTableCell = withStyles((theme) => ({
-    head: {
+const StyledTableCell = TableCell;
 
-        fontSize: 17,
-        fontWeight: 600,
-        border: 'none'
-    },
-    body: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        borderWidth: 0
-    },
-}))(TableCell);
-
-const StyledTableCellMain = withStyles((theme) => ({
-    head: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.common.white,
-        fontSize: 20,
-        fontWeight: 600,
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center'
-    },
-}))(TableCell);
+const StyledTableCellMain = TableCell;
 
 function Row(props) {
     const { row } = props;
@@ -83,7 +71,7 @@ function Row(props) {
 
 export default function BasicTable(props) {
     const { feedback } = props;
-    const classes = useStyles();
+
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -97,17 +85,41 @@ export default function BasicTable(props) {
     };
 
     return (
-        <Paper className={classes.root} style={{ width: "100%", maxWidth: isMobile ? 250 : "100%", overflowX: "auto", marginLeft: "auto", marginRight: "auto" }}>
+        <StyledPaper className={classes.root} style={{ width: "100%", maxWidth: isMobile ? 250 : "100%", overflowX: "auto", marginLeft: "auto", marginRight: "auto" }}>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Overall</StyledTableCell>
-                            <StyledTableCell>Content Provided</StyledTableCell>
-                            <StyledTableCell>Punctuality</StyledTableCell>
-                            <StyledTableCell>Class Interaction</StyledTableCell>
-                            <StyledTableCell>Your Impression</StyledTableCell>
-                            <StyledTableCell>Additional Comments</StyledTableCell>
+                            <StyledTableCell
+                                classes={{
+                                    head: classes.head,
+                                    body: classes.body
+                                }}>Overall</StyledTableCell>
+                            <StyledTableCell
+                                classes={{
+                                    head: classes.head,
+                                    body: classes.body
+                                }}>Content Provided</StyledTableCell>
+                            <StyledTableCell
+                                classes={{
+                                    head: classes.head,
+                                    body: classes.body
+                                }}>Punctuality</StyledTableCell>
+                            <StyledTableCell
+                                classes={{
+                                    head: classes.head,
+                                    body: classes.body
+                                }}>Class Interaction</StyledTableCell>
+                            <StyledTableCell
+                                classes={{
+                                    head: classes.head,
+                                    body: classes.body
+                                }}>Your Impression</StyledTableCell>
+                            <StyledTableCell
+                                classes={{
+                                    head: classes.head,
+                                    body: classes.body
+                                }}>Additional Comments</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -133,6 +145,6 @@ export default function BasicTable(props) {
                     color: 'black'
                 }}
             />
-        </Paper>
+        </StyledPaper>
     );
 }

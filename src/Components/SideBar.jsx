@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { styled } from '@mui/material/styles';
 import clsx from "clsx";
 import { useSelector, useDispatch } from "react-redux";
 import { saveUserData, setAuth } from "../redux/actions";
 import { useTheme } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
 import { Route, Link, Switch, withRouter } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
@@ -34,20 +34,39 @@ import UserType from "./UserType";
 import Profile from "../Containers/Profile";
 import logo from "../Resources/Images/feedifyLogo.png";
 
-const drawerWidth = 240;
+const PREFIX = 'SideBar';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const classes = {
+    root: `${PREFIX}-root`,
+    appBar: `${PREFIX}-appBar`,
+    appBarShift: `${PREFIX}-appBarShift`,
+    menuButton: `${PREFIX}-menuButton`,
+    hide: `${PREFIX}-hide`,
+    drawer: `${PREFIX}-drawer`,
+    drawerOpen: `${PREFIX}-drawerOpen`,
+    drawerClose: `${PREFIX}-drawerClose`,
+    toolbar: `${PREFIX}-toolbar`,
+    content: `${PREFIX}-content`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
         display: "flex",
     },
-    appBar: {
+
+    [`& .${classes.appBar}`]: {
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
-    appBarShift: {
+
+    [`& .${classes.appBarShift}`]: {
         marginLeft: drawerWidth,
         width: `calc(100% - ${drawerWidth}px)`,
         transition: theme.transitions.create(["width", "margin"], {
@@ -55,25 +74,30 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    menuButton: {
+
+    [`& .${classes.menuButton}`]: {
         marginRight: 36,
     },
-    hide: {
+
+    [`& .${classes.hide}`]: {
         display: "none",
     },
-    drawer: {
+
+    [`& .${classes.drawer}`]: {
         width: drawerWidth,
         flexShrink: 0,
         whiteSpace: "nowrap",
     },
-    drawerOpen: {
+
+    [`& .${classes.drawerOpen}`]: {
         width: drawerWidth,
         transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    drawerClose: {
+
+    [`& .${classes.drawerClose}`]: {
         transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -84,7 +108,8 @@ const useStyles = makeStyles((theme) => ({
             width: theme.spacing(9) + 1,
         },
     },
-    toolbar: {
+
+    [`& .${classes.toolbar}`]: {
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
@@ -92,18 +117,21 @@ const useStyles = makeStyles((theme) => ({
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
     },
-    content: {
+
+    [`& .${classes.content}`]: {
         flexGrow: 1,
         padding: theme.spacing(3),
-    },
+    }
 }));
+
+const drawerWidth = 240;
 
 function MiniDrawer(props) {
     const { loading, history } = props;
     const loggedin = useSelector((state) => state.auth.loggedin);
     const user = useSelector((state) => state.auth.userData);
     const dispatch = useDispatch();
-    const classes = useStyles();
+
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
@@ -132,7 +160,7 @@ function MiniDrawer(props) {
     };
 
     return (
-        <div className={classes.root}>
+        <Root className={classes.root}>
             <CssBaseline />
 
             <AppBar
@@ -340,7 +368,7 @@ function MiniDrawer(props) {
                     />
                 </Switch>
             </div>
-        </div>
+        </Root>
     );
 }
 

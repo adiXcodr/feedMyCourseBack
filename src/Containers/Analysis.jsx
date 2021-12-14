@@ -1,15 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { styled } from '@mui/material/styles';
 import { useLocation, withRouter } from 'react-router-dom';
 import { Card, CardActions, CardContent, Button, Typography, Badge, Divider, Paper, Grid, Select, MenuItem } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from "react-redux";
 import firebase from "../firebaseHandler";
-import classes from '../App.module.css';
+// import classes from '../App.module.css';
 import moment from "moment";
 import { isMobile } from "react-device-detect";
 import CourseBarRanks from '../Components/CourseBarRanks';
 import FeedbackTable from "../Components/FeedbackTable";
 import { colors } from "../constants";
+const PREFIX = 'Analysis';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    paper: `${PREFIX}-paper`,
+    control: `${PREFIX}-control`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
+        flexGrow: 1,
+    },
+
+    [`& .${classes.paper}`]: {
+        height: 140,
+        width: 100,
+    },
+
+    [`& .${classes.control}`]: {
+        padding: theme.spacing(2),
+    }
+}));
+
 const db = firebase.firestore();
 
 const fields = [
@@ -35,19 +62,6 @@ const Analysis = (props) => {
     const [barChartData, setBarChartData] = useState([]);
     const [activeCourse, setActiveCourse] = useState("");
     const [activefeedback, setActiveFeedback] = useState([]);
-
-    const useStyles = makeStyles((theme) => ({
-        root: {
-            flexGrow: 1,
-        },
-        paper: {
-            height: 140,
-            width: 100,
-        },
-        control: {
-            padding: theme.spacing(2),
-        },
-    }));
 
     useEffect(() => {
         if (!loggedin) {
@@ -207,7 +221,7 @@ const Analysis = (props) => {
     }, [feedbackField]);
 
     return (
-        <div style={{ marginTop: 30, width: "90%", marginLeft: "auto", marginRight: "auto" }}>
+        <Root style={{ marginTop: 30, width: "90%", marginLeft: "auto", marginRight: "auto" }}>
 
             <div style={{ width: "100%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20 }} >
 
@@ -361,8 +375,7 @@ const Analysis = (props) => {
                 null
             }
 
-        </div>
+        </Root>
     );
-
 }
 export default withRouter(Analysis);
