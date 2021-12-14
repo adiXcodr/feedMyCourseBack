@@ -134,13 +134,13 @@ function MiniDrawer(props) {
     return (
         <div className={classes.root}>
             <CssBaseline />
-{/* 
+
             <AppBar
                 position="fixed"
                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: open,
                 })}
-                color="white"
+                color="inherit"
             >
                 <Toolbar>
                     <IconButton
@@ -168,7 +168,7 @@ function MiniDrawer(props) {
                         FEEDIFY
                     </Typography>
                 </Toolbar>
-            </AppBar> */}
+            </AppBar>
 
             <Drawer
                 variant="permanent"
