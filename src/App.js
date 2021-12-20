@@ -10,7 +10,7 @@ import firebase from "./firebaseHandler";
 import { colors } from "./constants";
 const db = firebase.firestore();
 
-const theme = createTheme(adaptV4Theme({
+const theme = createTheme({
   palette: {
     primary: {
       main: colors.primary
@@ -19,7 +19,7 @@ const theme = createTheme(adaptV4Theme({
       main: colors.secondary
     }
   }
-}));
+});
 
 const App = () => {
 
