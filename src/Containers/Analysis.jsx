@@ -1,15 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, Badge, Divider, Paper, Grid, Select, MenuItem } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from "react";
+import { styled } from "@mui/material/styles";
+import { withRouter } from "react-router-dom";
+import { Card, Typography, Grid, Select, MenuItem } from "@mui/material";
 import { useSelector } from "react-redux";
 import firebase from "../firebaseHandler";
-import classes from '../App.module.css';
-import moment from "moment";
-import { isMobile } from "react-device-detect";
-import CourseBarRanks from '../Components/CourseBarRanks';
+import CourseBarRanks from "../Components/CourseBarRanks";
 import FeedbackTable from "../Components/FeedbackTable";
 import { colors } from "../constants";
+const PREFIX = "Analysis";
+
+const classes = {
+    root: `${PREFIX}-root`,
+    paper: `${PREFIX}-paper`,
+    control: `${PREFIX}-control`,
+};
+
+const Root = styled("div")(({ theme }) => ({
+    [`& .${classes.root}`]: {
+        flexGrow: 1,
+    },
+
+    [`& .${classes.paper}`]: {
+        height: 140,
+        width: 100,
+    },
+
+    [`& .${classes.control}`]: {
+        padding: theme.spacing(2),
+    },
+}));
+
 const db = firebase.firestore();
 
 const fields = [
@@ -18,12 +38,10 @@ const fields = [
     { id: "punctuality", name: "Punctuality" },
     { id: "query", name: "Class Interaction" },
     { id: "instructor", name: "Your Impression" },
-]
+];
 
 const Analysis = (props) => {
     const { history } = props;
-    const location = useLocation();
-    const params = location.state;
     const loggedin = useSelector((state) => state.auth.loggedin);
     const user = useSelector((state) => state.auth.userData);
     const [courses, setCourses] = useState([]);
@@ -36,19 +54,6 @@ const Analysis = (props) => {
     const [activeCourse, setActiveCourse] = useState("");
     const [activefeedback, setActiveFeedback] = useState([]);
 
-    const useStyles = makeStyles((theme) => ({
-        root: {
-            flexGrow: 1,
-        },
-        paper: {
-            height: 140,
-            width: 100,
-        },
-        control: {
-            padding: theme.spacing(2),
-        },
-    }));
-
     useEffect(() => {
         if (!loggedin) {
             history.push("/");
@@ -56,20 +61,24 @@ const Analysis = (props) => {
     }, [loggedin]);
 
     useEffect(() => {
-        if (user.userType != "Faculty") {
+        if (user.userType !== "Faculty") {
             history.push("/dashboard");
         }
     }, [user]);
 
     const getAnalysis = () => {
-        db.collection("courses").where("instructorEmail", "==", user.email)
+        db.collection("courses")
+            .where("instructorEmail", "==", user.email)
             .get()
             .then(async (querySnapshot) => {
                 let courses = [];
                 for (let doc of querySnapshot.docs) {
                     let course = doc.data();
                     try {
-                        let feedbackSnapshot = await db.collection("feedback").where("courseCode", "==", course.courseCode).get();
+                        let feedbackSnapshot = await db
+                            .collection("feedback")
+                            .where("courseCode", "==", course.courseCode)
+                            .get();
                         let feedback = [];
                         feedbackSnapshot.forEach((doc) => {
                             let obj = doc.data();
@@ -78,8 +87,7 @@ const Analysis = (props) => {
                         });
                         course.feedback = feedback;
                         courses.push(course);
-                    }
-                    catch (err) {
+                    } catch (err) {
                         console.log("Error getting added feedback: ", err);
                         courses.push(course);
                     }
@@ -90,7 +98,6 @@ const Analysis = (props) => {
             .catch((error) => {
                 console.log("Error getting Analysis Courses: ", error);
             });
-
     };
 
     const startSetDashboardData = (courses) => {
@@ -105,11 +112,14 @@ const Analysis = (props) => {
             if (course.feedback && course.feedback.length > 0) {
                 let sum = 0;
                 feedbackRecieved += course.feedback.length;
-                if (!mostReviewsScore || course.feedback.length > mostReviewsScore.score) {
+                if (
+                    !mostReviewsScore ||
+                    course.feedback.length > mostReviewsScore.score
+                ) {
                     mostReviewsScore = {
                         name: course.name,
                         code: course.courseCode,
-                        score: course.feedback.length
+                        score: course.feedback.length,
                     };
                 }
                 course.feedback.forEach((entry) => {
@@ -120,7 +130,7 @@ const Analysis = (props) => {
                     bestScore = {
                         name: course.name,
                         code: course.courseCode,
-                        score: avgScore
+                        score: avgScore,
                     };
                 }
             }
@@ -135,7 +145,7 @@ const Analysis = (props) => {
             coursesAdded,
             feedbackRecieved,
             bestCourse,
-            mostReviews
+            mostReviews,
         };
         console.log("Analysis Dashboard Data", obj);
         setTotalFeedback(feedbackRecieved);
@@ -146,14 +156,13 @@ const Analysis = (props) => {
     const truncateText = (text, len) => {
         if (text.length <= len) {
             return text;
-        }
-        else {
+        } else {
             return text.substring(0, len) + "...";
         }
     };
 
     const startFieldWiseBarChart = (courses, feedbackField) => {
-        const field = fields.find(o => o.name === feedbackField);
+        const field = fields.find((o) => o.name === feedbackField);
         if (field) {
             console.log("Field ID selected is", field.id);
             let barChartData = [];
@@ -167,7 +176,7 @@ const Analysis = (props) => {
                     barChartData.push({
                         name: course.name,
                         score: avg,
-                        courseCode: course.courseCode
+                        courseCode: course.courseCode,
                     });
                 }
             });
@@ -179,7 +188,7 @@ const Analysis = (props) => {
 
     const startSetActiveFeedback = (courses, name) => {
         setActiveCourse(name);
-        const course = courses.find(o => o.courseCode === name);
+        const course = courses.find((o) => o.courseCode === name);
         if (course) {
             let feedback = course.feedback;
             if (feedback) {
@@ -207,163 +216,230 @@ const Analysis = (props) => {
     }, [feedbackField]);
 
     return (
-        <div style={{ marginTop: 30, width: "90%", marginLeft: "auto", marginRight: "auto" }}>
-
-            <div style={{ width: "100%", marginLeft: "auto", marginRight: "auto", marginBottom: 20, marginTop: 20 }} >
-
-                <Grid container className={classes.root} spacing={2} justify="center" >
-                    <Grid item xs={12} >
-                        <Grid container justify="center" spacing={2}>
+        <Root
+            style={{
+                marginTop: 30,
+                width: "90%",
+                marginLeft: "auto",
+                marginRight: "auto",
+            }}
+        >
+            <div
+                style={{
+                    width: "100%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    marginBottom: 20,
+                    marginTop: 20,
+                }}
+            >
+                <Grid
+                    container
+                    className={classes.root}
+                    spacing={2}
+                    justifyContent="center"
+                >
+                    <Grid item xs={12}>
+                        <Grid container justifyContent="center" spacing={2}>
                             <Grid item xs={12} lg={3}>
-                                <Card style={{
-                                    padding: 20,
-                                    backgroundColor: colors.primary,
-                                    transition: "0.3s",
-                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-                                    "&:hover": {
-                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
-                                    },
-                                    borderRadius: 30,
-                                }}>
-                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Courses Added</Typography>
+                                <Card
+                                    style={{
+                                        padding: 20,
+                                        backgroundColor: colors.primary,
+                                        transition: "0.3s",
+                                        boxShadow:
+                                            "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                        "&:hover": {
+                                            boxShadow:
+                                                "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+                                        },
+                                        borderRadius: 30,
+                                    }}
+                                >
+                                    <Typography
+                                        style={{
+                                            fontSize: 17,
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Courses Added
+                                    </Typography>
                                     <Typography>{totalCourses}</Typography>
                                 </Card>
                             </Grid>
                             <Grid item xs={12} lg={3}>
-                                <Card style={{
-                                    padding: 20,
-                                    backgroundColor: colors.primary,
-                                    transition: "0.3s",
-                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-                                    "&:hover": {
-                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
-                                    },
-                                    borderRadius: 30,
-                                }}>
-                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Feedback Recieved</Typography>
+                                <Card
+                                    style={{
+                                        padding: 20,
+                                        backgroundColor: colors.primary,
+                                        transition: "0.3s",
+                                        boxShadow:
+                                            "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                        "&:hover": {
+                                            boxShadow:
+                                                "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+                                        },
+                                        borderRadius: 30,
+                                    }}
+                                >
+                                    <Typography
+                                        style={{
+                                            fontSize: 17,
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Feedback Recieved
+                                    </Typography>
                                     <Typography>{totalFeedback}</Typography>
                                 </Card>
                             </Grid>
                             <Grid item xs={12} lg={3}>
-                                <Card style={{
-                                    padding: 20,
-                                    backgroundColor: colors.primary,
-                                    transition: "0.3s",
-                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-                                    "&:hover": {
-                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
-                                    },
-                                    borderRadius: 30,
-                                }}>
-                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Highest Rated Course</Typography>
-                                    <Typography>{truncateText(topRated, 30)}</Typography>
+                                <Card
+                                    style={{
+                                        padding: 20,
+                                        backgroundColor: colors.primary,
+                                        transition: "0.3s",
+                                        boxShadow:
+                                            "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                        "&:hover": {
+                                            boxShadow:
+                                                "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+                                        },
+                                        borderRadius: 30,
+                                    }}
+                                >
+                                    <Typography
+                                        style={{
+                                            fontSize: 17,
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Highest Rated Course
+                                    </Typography>
+                                    <Typography>
+                                        {truncateText(topRated, 30)}
+                                    </Typography>
                                 </Card>
                             </Grid>
                             <Grid item xs={12} lg={3}>
-                                <Card style={{
-                                    padding: 20,
-                                    backgroundColor: colors.primary,
-                                    transition: "0.3s",
-                                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-                                    "&:hover": {
-                                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
-                                    },
-                                    borderRadius: 30,
-                                }}>
-                                    <Typography style={{ fontSize: 17, fontWeight: "bold" }}>Most Reviewed Course</Typography>
-                                    <Typography >{truncateText(mostReviews, 30)}</Typography>
+                                <Card
+                                    style={{
+                                        padding: 20,
+                                        backgroundColor: colors.primary,
+                                        transition: "0.3s",
+                                        boxShadow:
+                                            "0 8px 40px -12px rgba(0,0,0,0.3)",
+                                        "&:hover": {
+                                            boxShadow:
+                                                "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+                                        },
+                                        borderRadius: 30,
+                                    }}
+                                >
+                                    <Typography
+                                        style={{
+                                            fontSize: 17,
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        Most Reviewed Course
+                                    </Typography>
+                                    <Typography>
+                                        {truncateText(mostReviews, 30)}
+                                    </Typography>
                                 </Card>
                             </Grid>
                         </Grid>
                     </Grid>
-
                 </Grid>
-
-
             </div>
 
-
-            {courses && courses.length > 0 ?
-                <Card style={{
-                    width: "100%",
-                    marginBottom: 20,
-                    marginTop: 40,
-                    padding: 20,
-                    overflowX: "scroll",
-                    marginBottom: 50,
-                    transition: "0.3s",
-                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-                    "&:hover": {
-                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
-                    },
-                    borderRadius: 30,
-                    padding: 30,
-                    paddingTop: 40
-                }} >
+            {courses && courses.length > 0 ? (
+                <Card
+                    style={{
+                        width: "100%",
+                        marginBottom: 20,
+                        marginTop: 40,
+                        padding: 20,
+                        overflowX: "scroll",
+                        marginBottom: 50,
+                        transition: "0.3s",
+                        boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                        "&:hover": {
+                            boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+                        },
+                        borderRadius: 30,
+                        padding: 30,
+                        paddingTop: 40,
+                    }}
+                >
                     <Select
                         labelId="field-select-label"
                         id="field-select"
                         value={feedbackField}
                         onChange={(e) => setFeedbackField(e.target.value)}
                         variant="outlined"
-                        style={{ width: "100%", marginBottom: 30, textAlign: "left" }}
+                        style={{
+                            width: "100%",
+                            marginBottom: 30,
+                            textAlign: "left",
+                        }}
                     >
-                        {fields.map((val) => <MenuItem value={val.name}>{val.name}</MenuItem>)}
+                        {fields.map((val) => (
+                            <MenuItem value={val.name}>{val.name}</MenuItem>
+                        ))}
                     </Select>
 
-                    {barChartData && barChartData.length > 0 ?
+                    {barChartData && barChartData.length > 0 ? (
                         <CourseBarRanks data={barChartData} />
-                        :
-                        null
-                    }
-
+                    ) : null}
                 </Card>
-                :
-                null
-            }
+            ) : null}
 
-
-            {courses && courses.length > 0 ?
-                <Card style={{
-                    width: "100%",
-                    marginBottom: 20,
-                    marginTop: 20,
-                    padding: 20,
-                    maxWidth: "100%",
-                    marginBottom: 50,
-                    transition: "0.3s",
-                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-                    "&:hover": {
-                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
-                    },
-                    borderRadius: 30,
-                    padding: 30,
-                    paddingTop: 30
-                }} >
+            {courses && courses.length > 0 ? (
+                <Card
+                    style={{
+                        width: "100%",
+                        marginBottom: 20,
+                        marginTop: 20,
+                        padding: 20,
+                        maxWidth: "100%",
+                        marginBottom: 50,
+                        transition: "0.3s",
+                        boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                        "&:hover": {
+                            boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+                        },
+                        borderRadius: 30,
+                        padding: 30,
+                        paddingTop: 30,
+                    }}
+                >
                     <Select
                         labelId="field-select-label"
                         id="field-select"
                         value={activeCourse}
-                        onChange={(e) => startSetActiveFeedback(courses, e.target.value)}
+                        onChange={(e) =>
+                            startSetActiveFeedback(courses, e.target.value)
+                        }
                         variant="outlined"
-                        style={{ width: "100%", marginBottom: 30, textAlign: "left" }}
+                        style={{
+                            width: "100%",
+                            marginBottom: 30,
+                            textAlign: "left",
+                        }}
                     >
-                        {courses.map((val) => <MenuItem value={val.courseCode}>{val.courseCode}</MenuItem>)}
+                        {courses.map((val) => (
+                            <MenuItem value={val.courseCode}>
+                                {val.courseCode}
+                            </MenuItem>
+                        ))}
                     </Select>
 
-
-
                     <FeedbackTable feedback={activefeedback} />
-
-
                 </Card>
-                :
-                null
-            }
-
-        </div>
-
+            ) : null}
+        </Root>
     );
-
-}
+};
 export default withRouter(Analysis);

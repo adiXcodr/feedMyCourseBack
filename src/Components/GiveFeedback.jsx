@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import classes from './GiveFeedback.module.css';
-import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, TextField, Slider, Tooltip } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import classes from "./GiveFeedback.module.css";
+import { useLocation, withRouter } from "react-router-dom";
+import {
+    Card,
+    CardContent,
+    Button,
+    Typography,
+    TextField,
+    Slider,
+} from "@mui/material";
+import { useSelector } from "react-redux";
 import firebase from "../firebaseHandler";
 const db = firebase.firestore();
 
 const GiveFeedback = (props) => {
     const { history } = props;
     const user = useSelector((state) => state.auth.userData);
-    const loggedin = useSelector((state) => state.auth.loggedin);
     const location = useLocation();
     const params = location.state;
     const course = params.courseDetails;
@@ -25,16 +31,16 @@ const GiveFeedback = (props) => {
     const marks = [
         {
             value: 1,
-            label: '1',
+            label: "1",
         },
         {
             value: 3,
-            label: '3',
+            label: "3",
         },
         {
             value: 5,
-            label: '5',
-        }
+            label: "5",
+        },
     ];
 
     const handleAddFeedback = () => {
@@ -48,10 +54,12 @@ const GiveFeedback = (props) => {
             punctuality,
             additional,
             query,
-            datePosted
+            datePosted,
         };
         if (edit) {
-            db.collection("feedback").doc(params.feedbackDetails.id).set(toAdd)
+            db.collection("feedback")
+                .doc(params.feedbackDetails.id)
+                .set(toAdd)
                 .then(() => {
                     console.log("Feedback Add Success");
                     history.push("/profile");
@@ -60,7 +68,8 @@ const GiveFeedback = (props) => {
                     console.log("Feedback Add Failure", error);
                 });
         } else {
-            db.collection("feedback").add(toAdd)
+            db.collection("feedback")
+                .add(toAdd)
                 .then(() => {
                     console.log("Feedback Add Success");
                     history.push("/profile");
@@ -69,11 +78,10 @@ const GiveFeedback = (props) => {
                     console.log("Feedback Add Failure", error);
                 });
         }
-
     };
 
     const getEditableDetails = (feedbackDetails) => {
-        console.log("Feedback details are", feedbackDetails)
+        console.log("Feedback details are", feedbackDetails);
         setEditccode(feedbackDetails.courseCode);
         setEdit(true);
         setInstructor(Number(feedbackDetails.instructor));
@@ -84,16 +92,13 @@ const GiveFeedback = (props) => {
         setQuery(Number(feedbackDetails.query));
     };
 
-
     useEffect(() => {
         if (!user) {
             history.push("/");
-        }
-        else {
-            if (user.userType == "Faculty") {
+        } else {
+            if (user.userType === "Faculty") {
                 history.push("/dashboard");
-            }
-            else {
+            } else {
                 if (params.feedbackDetails) {
                     getEditableDetails(params.feedbackDetails);
                 }
@@ -103,25 +108,25 @@ const GiveFeedback = (props) => {
 
     return (
         <div className={classes.GiveFeedbackcontainer}>
-            <Card style={{
-                width: "80%",
-                marginLeft: "auto",
-                marginRight: "auto",
-                marginBottom: 20,
-                marginBottom: 50,
-                transition: "0.3s",
-                boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
-                "&:hover": {
-                    boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
-                },
-                borderRadius: 30,
-                padding: 20,
-                paddingTop: 30
-            }} >
-
+            <Card
+                style={{
+                    width: "80%",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    marginBottom: 20,
+                    marginBottom: 50,
+                    transition: "0.3s",
+                    boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
+                    "&:hover": {
+                        boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+                    },
+                    borderRadius: 30,
+                    padding: 20,
+                    paddingTop: 30,
+                }}
+            >
                 <CardContent>
-
-                    {course &&
+                    {course && (
                         <div>
                             <Typography color="textSecondary" gutterBottom>
                                 {course.courseCode}
@@ -130,19 +135,26 @@ const GiveFeedback = (props) => {
                                 {course.name}
                             </Typography>
                             <Typography color="textSecondary">
-                                {course.instructorName} - {course.instructorEmail}
+                                {course.instructorName} -{" "}
+                                {course.instructorEmail}
                             </Typography>
                         </div>
-                    }
+                    )}
 
-                    {edit &&
+                    {edit && (
                         <Typography variant="h5" component="h2">
                             {editccode}
-                        </Typography>}
+                        </Typography>
+                    )}
 
                     <div style={{ marginTop: 30 }}>
-                        <Typography variant="p" component="p" style={{ textAlign: "left", fontSize: 20 }}>
-                            How relevant was the content provided in accordance with the course?
+                        <Typography
+                            variant="p"
+                            component="p"
+                            style={{ textAlign: "left", fontSize: 20 }}
+                        >
+                            How relevant was the content provided in accordance
+                            with the course?
                         </Typography>
                         <Slider
                             defaultValue={1}
@@ -154,14 +166,18 @@ const GiveFeedback = (props) => {
                             min={1}
                             onChange={(e, val) => setContent(val)}
                             style={{
-                                marginTop: 40
+                                marginTop: 40,
                             }}
                             value={content}
                         />
                     </div>
 
                     <div style={{ marginTop: 30 }}>
-                        <Typography variant="p" component="p" style={{ textAlign: "left", fontSize: 20 }}>
+                        <Typography
+                            variant="p"
+                            component="p"
+                            style={{ textAlign: "left", fontSize: 20 }}
+                        >
                             How regular were the classes held?
                         </Typography>
                         <Slider
@@ -174,15 +190,20 @@ const GiveFeedback = (props) => {
                             min={1}
                             onChange={(e, val) => setPunctuality(val)}
                             style={{
-                                marginTop: 40
+                                marginTop: 40,
                             }}
                             value={punctuality}
                         />
                     </div>
 
                     <div style={{ marginTop: 30 }}>
-                        <Typography variant="p" component="p" style={{ textAlign: "left", fontSize: 20 }}>
-                            How interactive were the classes in terms of doubts resolved?
+                        <Typography
+                            variant="p"
+                            component="p"
+                            style={{ textAlign: "left", fontSize: 20 }}
+                        >
+                            How interactive were the classes in terms of doubts
+                            resolved?
                         </Typography>
                         <Slider
                             defaultValue={1}
@@ -194,14 +215,18 @@ const GiveFeedback = (props) => {
                             min={1}
                             onChange={(e, val) => setQuery(val)}
                             style={{
-                                marginTop: 40
+                                marginTop: 40,
                             }}
                             value={query}
                         />
                     </div>
 
                     <div style={{ marginTop: 30 }}>
-                        <Typography variant="p" component="p" style={{ textAlign: "left", fontSize: 20 }}>
+                        <Typography
+                            variant="p"
+                            component="p"
+                            style={{ textAlign: "left", fontSize: 20 }}
+                        >
                             How would you rate the instructor?
                         </Typography>
                         <Slider
@@ -214,14 +239,18 @@ const GiveFeedback = (props) => {
                             min={1}
                             onChange={(e, val) => setInstructor(val)}
                             style={{
-                                marginTop: 40
+                                marginTop: 40,
                             }}
                             value={instructor}
                         />
                     </div>
 
                     <div style={{ marginTop: 30 }}>
-                        <Typography variant="p" component="p" style={{ textAlign: "left", fontSize: 20 }}>
+                        <Typography
+                            variant="p"
+                            component="p"
+                            style={{ textAlign: "left", fontSize: 20 }}
+                        >
                             Please share your overall experience with the course
                         </Typography>
                         <Slider
@@ -234,14 +263,18 @@ const GiveFeedback = (props) => {
                             min={1}
                             onChange={(e, val) => setOverall(val)}
                             style={{
-                                marginTop: 40
+                                marginTop: 40,
                             }}
                             value={overall}
                         />
                     </div>
 
                     <div style={{ marginTop: 30 }}>
-                        <Typography variant="p" component="p" style={{ textAlign: "left", fontSize: 20 }}>
+                        <Typography
+                            variant="p"
+                            component="p"
+                            style={{ textAlign: "left", fontSize: 20 }}
+                        >
                             Additional comments (if any)
                         </Typography>
                         <TextField
@@ -249,21 +282,24 @@ const GiveFeedback = (props) => {
                             onChange={(e) => setAdditional(e.target.value)}
                             style={{
                                 width: "100%",
-                                marginTop: 20
+                                marginTop: 20,
                             }}
                             value={additional}
                             multiline={true}
                             rows={4}
                         />
                     </div>
-
                 </CardContent>
-                <Button variant="contained" color="primary" style={{ marginBottom: 20, marginTop: 20 }} onClick={handleAddFeedback}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ marginBottom: 20, marginTop: 20 }}
+                    onClick={handleAddFeedback}
+                >
                     {edit ? "Edit" : "Give"} Feedback
                 </Button>
             </Card>
         </div>
-
     );
-}
+};
 export default withRouter(GiveFeedback);

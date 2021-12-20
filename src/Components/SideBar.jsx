@@ -1,144 +1,169 @@
-import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
+import React, { useState } from "react";
+import { styled } from "@mui/material/styles";
+import clsx from "clsx";
 import { useSelector, useDispatch } from "react-redux";
 import { saveUserData, setAuth } from "../redux/actions";
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Route, Link, Switch, withRouter } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import HomeIcon from '@material-ui/icons/Home';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { useTheme } from "@mui/material/styles";
+import { Route, Switch, withRouter } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
+import Drawer from "@mui/material/Drawer";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import Avatar from "@mui/material/Avatar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItem from "@mui/material/ListItem";
+import HomeIcon from "@mui/icons-material/Home";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EqualizerIcon from "@mui/icons-material/Equalizer";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import firebase from "../firebaseHandler";
 import Landing from "../Containers/Landing";
 import Dashboard from "../Containers/Dashboard";
 import GiveFeedback from "./GiveFeedback";
 import AddCourse from "./AddCourse";
-import Analysis from '../Containers/Analysis';
-import UserType from './UserType';
+import Analysis from "../Containers/Analysis";
+import UserType from "./UserType";
 import Profile from "../Containers/Profile";
 import logo from "../Resources/Images/feedifyLogo.png";
 
-const drawerWidth = 240;
+const PREFIX = "SideBar";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
+const classes = {
+    root: `${PREFIX}-root`,
+    appBar: `${PREFIX}-appBar`,
+    appBarShift: `${PREFIX}-appBarShift`,
+    menuButton: `${PREFIX}-menuButton`,
+    hide: `${PREFIX}-hide`,
+    drawer: `${PREFIX}-drawer`,
+    drawerOpen: `${PREFIX}-drawerOpen`,
+    drawerClose: `${PREFIX}-drawerClose`,
+    toolbar: `${PREFIX}-toolbar`,
+    content: `${PREFIX}-content`,
+};
+
+const Root = styled("div")(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        display: "flex",
     },
-    appBar: {
+
+    [`& .${classes.appBar}`]: {
         zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
+        transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
-    appBarShift: {
+
+    [`& .${classes.appBarShift}`]: {
         marginLeft: drawerWidth,
         width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
+        transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    menuButton: {
+
+    [`& .${classes.menuButton}`]: {
         marginRight: 36,
     },
-    hide: {
-        display: 'none',
+
+    [`& .${classes.hide}`]: {
+        display: "none",
     },
-    drawer: {
+
+    [`& .${classes.drawer}`]: {
         width: drawerWidth,
         flexShrink: 0,
-        whiteSpace: 'nowrap',
+        whiteSpace: "nowrap",
     },
-    drawerOpen: {
+
+    [`& .${classes.drawerOpen}`]: {
         width: drawerWidth,
-        transition: theme.transitions.create('width', {
+        transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    drawerClose: {
-        transition: theme.transitions.create('width', {
+
+    [`& .${classes.drawerClose}`]: {
+        transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        overflowX: 'hidden',
+        overflowX: "hidden",
         width: theme.spacing(7) + 1,
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up("sm")]: {
             width: theme.spacing(9) + 1,
         },
     },
-    toolbar: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
+
+    [`& .${classes.toolbar}`]: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
         padding: theme.spacing(0, 1),
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
     },
-    content: {
+
+    [`& .${classes.content}`]: {
         flexGrow: 1,
         padding: theme.spacing(3),
     },
 }));
+
+const drawerWidth = 240;
 
 function MiniDrawer(props) {
     const { loading, history } = props;
     const loggedin = useSelector((state) => state.auth.loggedin);
     const user = useSelector((state) => state.auth.userData);
     const dispatch = useDispatch();
-    const classes = useStyles();
+
     const theme = useTheme();
     const [open, setOpen] = useState(false);
-    const [minWidth, setMinWidth] = useState('1224px');
+    const [minWidth, setMinWidth] = useState("1224px");
 
     const handleDrawerOpen = () => {
-        setMinWidth('0px');
+        setMinWidth("0px");
         setOpen(true);
     };
 
     const handleDrawerClose = () => {
-        setMinWidth('1224px');
+        setMinWidth("1224px");
         setOpen(false);
     };
 
     const singOutUser = () => {
-        firebase.auth().signOut().then(async () => {
-            await localStorage.clear();
-            dispatch(setAuth(false));
-            dispatch(saveUserData(null));
-            // history.push("/");
-            window.location.reload();
-        }).catch(function (error) {
-            // An error happened.
-        })
+        firebase
+            .auth()
+            .signOut()
+            .then(async () => {
+                await localStorage.clear();
+                dispatch(setAuth(false));
+                dispatch(saveUserData(null));
+                // history.push("/");
+                window.location.reload();
+            })
+            .catch(function (error) {
+                // An error happened.
+            });
     };
 
-    const isDesktopOrLaptop = useMediaQuery(
-    {
-        query: `(min-width: ${minWidth})`
-    }
-    );
-
+    const isDesktopOrLaptop = useMediaQuery({
+        query: `(min-width: ${minWidth})`,
+    });
 
     return (
-        <div className={classes.root}>
+        <Root className={classes.root}>
             <CssBaseline />
 
             <AppBar
@@ -146,7 +171,7 @@ function MiniDrawer(props) {
                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: open,
                 })}
-                color="white"
+                color="inherit"
             >
                 <Toolbar>
                     <IconButton
@@ -157,97 +182,205 @@ function MiniDrawer(props) {
                         className={clsx(classes.menuButton, {
                             [classes.hide]: open,
                         })}
+                        size="large"
                     >
                         {/* <MenuIcon /> */}
-                        <Avatar alt={"FF"} src={logo} style={{ width: 40, height: 40 }} />
+                        <Avatar
+                            alt={"FF"}
+                            src={logo}
+                            style={{ width: 40, height: 40 }}
+                        />
                     </IconButton>
-                    <Typography variant="h6" noWrap style={{ fontWeight: "bold" }}>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        style={{ fontWeight: "bold" }}
+                    >
                         FEEDIFY
                     </Typography>
                 </Toolbar>
             </AppBar>
 
-        { isDesktopOrLaptop &&
-            <Drawer
-                variant="permanent"
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: open,
-                    [classes.drawerClose]: !open,
-                })}
-                classes={{
-                    paper: clsx({
+            {isDesktopOrLaptop && (
+                <Drawer
+                    variant="permanent"
+                    className={clsx(classes.drawer, {
                         [classes.drawerOpen]: open,
                         [classes.drawerClose]: !open,
-                    }),
-                }}
-            >
-                <div className={classes.toolbar}>
-                    <Typography variant="h6" noWrap>
-                        Menu
-                    </Typography>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                    </IconButton>
-                </div>
-                
-                <Divider />
-                    { loggedin ?
+                    })}
+                    classes={{
+                        paper: clsx({
+                            [classes.drawerOpen]: open,
+                            [classes.drawerClose]: !open,
+                        }),
+                    }}
+                >
+                    <div className={classes.toolbar}>
+                        <Typography variant="h6" noWrap>
+                            Menu
+                        </Typography>
+                        <IconButton onClick={handleDrawerClose} size="large">
+                            {theme.direction === "rtl" ? (
+                                <ChevronRightIcon />
+                            ) : (
+                                <ChevronLeftIcon />
+                            )}
+                        </IconButton>
+                    </div>
+
+                    <Divider />
+                    {loggedin ? (
                         <List>
-                            <ListItem button key={"Dashboard"} onClick={() => history.push("/dashboard")}>
-                                <ListItemIcon><HomeIcon /></ListItemIcon>
+                            <ListItem
+                                button
+                                key={"Dashboard"}
+                                onClick={() => history.push("/dashboard")}
+                            >
+                                <ListItemIcon>
+                                    <HomeIcon />
+                                </ListItemIcon>
                                 <ListItemText primary={"Dashboard"} />
                             </ListItem>
 
-                            {user && user.userType == "Faculty" &&
-                                <ListItem button key={"Report"} onClick={() => history.push("/analysis")}>
-                                    <ListItemIcon><EqualizerIcon /></ListItemIcon>
+                            {user && user.userType === "Faculty" && (
+                                <ListItem
+                                    button
+                                    key={"Report"}
+                                    onClick={() => history.push("/analysis")}
+                                >
+                                    <ListItemIcon>
+                                        <EqualizerIcon />
+                                    </ListItemIcon>
                                     <ListItemText primary={"Report"} />
                                 </ListItem>
-                            }
-                            <ListItem button key={"Profile"} onClick={() => history.push("/profile")}>
-                                <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+                            )}
+                            <ListItem
+                                button
+                                key={"Profile"}
+                                onClick={() => history.push("/profile")}
+                            >
+                                <ListItemIcon>
+                                    <AccountCircleIcon />
+                                </ListItemIcon>
                                 <ListItemText primary={"Profile"} />
                             </ListItem>
                         </List>
-                        :
+                    ) : (
                         <List>
-
-                            <ListItem button key={"Home"} onClick={() => history.push("/")}>
-                                <ListItemIcon><HomeIcon /></ListItemIcon>
+                            <ListItem
+                                button
+                                key={"Home"}
+                                onClick={() => history.push("/")}
+                            >
+                                <ListItemIcon>
+                                    <HomeIcon />
+                                </ListItemIcon>
                                 <ListItemText primary={"Home"} />
                             </ListItem>
-
                         </List>
-                    }
-                <Divider />
-        
-                {loggedin &&
-                    <List>
-                        <ListItem button key={"Log Out"} onClick={singOutUser}>
-                            <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
-                            <ListItemText primary={"Log Out"} />
-                        </ListItem>
-                    </List>
-                }
-            </Drawer>
-        }
-       
+                    )}
+                    <Divider />
+
+                    {loggedin && (
+                        <List>
+                            <ListItem
+                                button
+                                key={"Log Out"}
+                                onClick={singOutUser}
+                            >
+                                <ListItemIcon>
+                                    <MeetingRoomIcon />
+                                </ListItemIcon>
+                                <ListItemText primary={"Log Out"} />
+                            </ListItem>
+                        </List>
+                    )}
+                </Drawer>
+            )}
 
             <div style={{ marginTop: "10vh", width: "100%" }}>
                 <Switch>
-                    <Route path='/' exact render={() => <Landing loading={loading} loggedin={loggedin} user={user} />} />
-                    <Route path='/dashboard' exact render={() => <Dashboard loading={loading} loggedin={loggedin} user={user} />} />
-                    <Route path='/analysis' exact render={() => <Analysis loading={loading} loggedin={loggedin} user={user} />} />
-                    <Route path='/changeUsertype' exact render={() => <UserType loading={loading} loggedin={loggedin} user={user} />} />
-                    <Route path='/dashboard/giveFeedback' exact render={() => <GiveFeedback loading={loading} loggedin={loggedin} user={user} />} />
-                    <Route path='/addCourse' exact render={() => <AddCourse loading={loading} loggedin={loggedin} user={user} />} />
-                    <Route path='/profile' exact render={() => <Profile loading={loading} loggedin={loggedin} user={user} />} />
+                    <Route
+                        path="/"
+                        exact
+                        render={() => (
+                            <Landing
+                                loading={loading}
+                                loggedin={loggedin}
+                                user={user}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/dashboard"
+                        exact
+                        render={() => (
+                            <Dashboard
+                                loading={loading}
+                                loggedin={loggedin}
+                                user={user}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/analysis"
+                        exact
+                        render={() => (
+                            <Analysis
+                                loading={loading}
+                                loggedin={loggedin}
+                                user={user}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/changeUsertype"
+                        exact
+                        render={() => (
+                            <UserType
+                                loading={loading}
+                                loggedin={loggedin}
+                                user={user}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/dashboard/giveFeedback"
+                        exact
+                        render={() => (
+                            <GiveFeedback
+                                loading={loading}
+                                loggedin={loggedin}
+                                user={user}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/addCourse"
+                        exact
+                        render={() => (
+                            <AddCourse
+                                loading={loading}
+                                loggedin={loggedin}
+                                user={user}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/profile"
+                        exact
+                        render={() => (
+                            <Profile
+                                loading={loading}
+                                loggedin={loggedin}
+                                user={user}
+                            />
+                        )}
+                    />
                 </Switch>
-
             </div>
-        </div >
+        </Root>
     );
 }
-
 
 export default withRouter(MiniDrawer);

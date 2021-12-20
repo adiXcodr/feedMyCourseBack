@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, Badge, TextField, InputAdornment } from '@material-ui/core';
-import { useSelector, useDispatch } from "react-redux";
+import { Card, CardActions, CardContent, Button, Typography, Badge, TextField, InputAdornment } from '@mui/material';
+import { useSelector } from "react-redux";
 import SelectUserType from "../Components/UserType";
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import SearchIcon from '@material-ui/icons/Search';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import SearchIcon from '@mui/icons-material/Search';
 import moment from "moment";
 import { isMobile } from "react-device-detect";
 import firebase from "../firebaseHandler";
@@ -12,7 +12,6 @@ const db = firebase.firestore();
 
 const Dashboard = (props) => {
   const { history } = props;
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userData);
   const loggedin = useSelector((state) => state.auth.loggedin);
   const [orgcourses, setOrgCourses] = useState([]);
@@ -22,7 +21,7 @@ const Dashboard = (props) => {
   const handleSearch = (e) => {
     let query = e.target.value;
     console.log("Search Courses Value", query);
-    if (query != "") {
+    if (query !== "") {
       query = query.toLowerCase();
       let result = courses.filter(item => (
         item.name + item.courseCode + item.instructorName + item.instructorEmail
@@ -61,7 +60,7 @@ const Dashboard = (props) => {
 
     return (
       <div style={{ width: isMobile ? "90%" : "80%", marginLeft: "auto", marginRight: "auto", marginTop: 20 }}>
-        {(user.userType && user.displayName && user.email && user.displayName != "" && user.email != "" ?
+        {(user.userType && user.displayName && user.email && user.displayName !== "" && user.email !== "" ?
           <div style={{}}>
 
             <Card className="dashboardTopBar"
@@ -110,7 +109,7 @@ const Dashboard = (props) => {
                   }}
                 />
 
-                {user.userType == "Faculty" &&
+                {user.userType === "Faculty" &&
                   <Button size="small" variant="contained" color="primary" onClick={() => history.push({
                     pathname: "/addCourse",
                     state: { courseCode: null }
@@ -159,7 +158,7 @@ const Dashboard = (props) => {
 
                 </CardContent>
 
-                {user.userType != "Faculty" ?
+                {user.userType !== "Faculty" ?
                   <CardActions>
                     <Button size="small" onClick={() => history.push({
                       pathname: "/dashboard/giveFeedback",
@@ -168,7 +167,7 @@ const Dashboard = (props) => {
                   </CardActions>
                   :
                   <CardActions>
-                    <Button disabled={course.instructorEmail != user.email} size="small" onClick={() => history.push({
+                    <Button disabled={course.instructorEmail !== user.email} size="small" onClick={() => history.push({
                       pathname: "/addCourse",
                       state: { courseCode: course.courseCode }
                     })}>Edit Course</Button>

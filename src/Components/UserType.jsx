@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Select, Button, MenuItem, TextField, Card } from '@material-ui/core';
+import { Select, Button, MenuItem, TextField, Card } from '@mui/material';
 import firebase from "../firebaseHandler";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { saveUserData } from "../redux/actions";
 const db = firebase.firestore();
 
 const allUserTypes = [
@@ -16,7 +15,6 @@ const allUserTypes = [
 
 const UserType = (props) => {
     const { history } = props;
-    const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.userData);
     const [userType, setUserType] = useState(user && user.userType ? user.userType : "Student");
     const [email, setEmail] = useState("");
@@ -27,8 +25,8 @@ const UserType = (props) => {
         if (user) {
             db.collection("users").doc(user.uid).set({
                 userType: userType,
-                email: email == "" ? user.email : email,
-                username: displayName == "" ? user.displayName : displayName
+                email: email === "" ? user.email : email,
+                username: displayName === "" ? user.displayName : displayName
             }, { merge: true }).then(() => {
                 console.log("Changed usertype to", userType);
                 history.push("/dashboard");
@@ -64,13 +62,12 @@ const UserType = (props) => {
                 boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
             },
             borderRadius: 30,
-            padding: 20,
             paddingTop: 30
         }}>
             <p style={{ fontSize: 30, marginBottom: 30 }}>Help us know you better.</p>
             <p style={{ fontSize: 15 }}>Who are you?</p>
 
-            {!user.displayName || user.displayName == "" ?
+            {!user.displayName || user.displayName === "" ?
                 <TextField
                     id="name"
                     label="Name"
@@ -85,7 +82,7 @@ const UserType = (props) => {
                 : null
             }
 
-            {!user.email || user.email == "" ?
+            {!user.email || user.email === "" ?
                 <TextField
                     id="email"
                     label="Email"

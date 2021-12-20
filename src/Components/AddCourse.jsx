@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, TextField } from '@material-ui/core';
+import { Card,  CardContent, Button, Typography, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import firebase from "../firebaseHandler";
 const db = firebase.firestore();
@@ -8,7 +8,6 @@ const db = firebase.firestore();
 const AddCourse = (props) => {
     const { history } = props;
     const user = useSelector((state) => state.auth.userData);
-    const loggedin = useSelector((state) => state.auth.loggedin);
     const location = useLocation();
     const params = location.state;
     const [name, setName] = useState("");
@@ -63,7 +62,7 @@ const AddCourse = (props) => {
             history.push("/");
         }
         else {
-            if (user.userType != "Faculty") {
+            if (user.userType !== "Faculty") {
                 history.push("/dashboard");
             }
             setInstructorName(user.displayName);
@@ -89,7 +88,6 @@ const AddCourse = (props) => {
                     boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
                 },
                 borderRadius: 30,
-                padding: 20,
                 paddingTop: 30
             }} >
 
