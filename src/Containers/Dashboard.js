@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, Badge, TextField, InputAdornment } from '@material-ui/core';
+import { Card, CardActions, CardContent, Button, Typography, Badge, TextField, InputAdornment } from '@mui/material';
 import { useSelector, useDispatch } from "react-redux";
 import SelectUserType from "../Components/UserType";
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import SearchIcon from '@material-ui/icons/Search';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import SearchIcon from '@mui/icons-material/Search';
 import moment from "moment";
 import { isMobile } from "react-device-detect";
 import firebase from "../firebaseHandler";

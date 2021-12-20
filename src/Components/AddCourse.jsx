@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, withRouter } from 'react-router-dom';
-import { Card, CardActions, CardContent, Button, Typography, TextField } from '@material-ui/core';
+import { Card, CardActions, CardContent, Button, Typography, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import firebase from "../firebaseHandler";
 const db = firebase.firestore();

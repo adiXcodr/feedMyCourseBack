@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Select, Button, MenuItem, TextField, Card } from '@material-ui/core';
+import { Select, Button, MenuItem, TextField, Card } from '@mui/material';
 import { useSelector, useDispatch } from "react-redux";
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { isMobile } from "react-device-detect";
