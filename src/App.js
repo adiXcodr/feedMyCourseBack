@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Home from './Containers/Home';
 import classes from './App.module.css';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider, createTheme, adaptV4Theme } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import store from "./redux/store";

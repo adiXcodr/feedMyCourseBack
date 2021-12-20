@@ -21,14 +21,12 @@ const GiveFeedback = (props) => {
                         marginRight: "auto",
                         marginBottom: 50,
                         padding: 20,
-                        marginBottom: 50,
                         transition: "0.3s",
                         boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
                         "&:hover": {
                             boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
                         },
                         borderRadius: 30,
-                        padding: 20,
                         paddingTop: 30,
                     }}
                 >
@@ -67,7 +65,7 @@ const GiveFeedback = (props) => {
                     </CardContent>
                 </Card>
 
-                {user.userType == "Faculty" ? (
+                {user.userType === "Faculty" ? (
                     <CoursesAdded />
                 ) : (
                     <FeedbacksAdded />

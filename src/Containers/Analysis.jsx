@@ -61,7 +61,7 @@ const Analysis = (props) => {
     }, [loggedin]);
 
     useEffect(() => {
-        if (user.userType != "Faculty") {
+        if (user.userType !== "Faculty") {
             history.push("/dashboard");
         }
     }, [user]);

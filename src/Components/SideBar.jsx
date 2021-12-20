@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import clsx from "clsx";
 import { useSelector, useDispatch } from "react-redux";
 import { saveUserData, setAuth } from "../redux/actions";
 import { useTheme } from "@mui/material/styles";
-import { Route, Link, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
@@ -242,7 +242,7 @@ function MiniDrawer(props) {
                                 <ListItemText primary={"Dashboard"} />
                             </ListItem>
 
-                            {user && user.userType == "Faculty" && (
+                            {user && user.userType === "Faculty" && (
                                 <ListItem
                                     button
                                     key={"Report"}
