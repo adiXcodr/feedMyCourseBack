@@ -41,3 +41,8 @@
 [<img src="https://image.flaticon.com/icons/svg/185/185981.svg" width="35" padding="10">](https://www.facebook.com/adittya.dey.3)
 [<img src="https://image.flaticon.com/icons/svg/185/185985.svg" width="35" padding="10">](https://www.instagram.com/adixdey/)
 
+## Contributors
+Thanks go to these wonderful people ✨
+<a href = "https://github.com/adiXcodr/feedMyCourseBack/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo=adiXcodr/feedMyCourseBack"/>
+</a>
